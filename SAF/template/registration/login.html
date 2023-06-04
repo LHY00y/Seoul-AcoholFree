@@ -1,0 +1,42 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로그인</title>
+    
+    <script>
+        window.onload = function () {
+            document.getElementById('login').className = 'nav-link active'
+        }
+    </script>
+
+</head>
+
+<body>
+
+    <form method="POST">{% csrf_token %}
+        <table style="width:30%;" class="table">
+            <tr>
+                <th>경찰서 코드</th>
+                <td><input type="text" name="username"></td>
+            </tr>
+            <tr>
+                <th>암호</th>
+                <td><input type="password" name="password"></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <input class="btn btn-primary" type="submit" value="로그인">
+                    <input class="btn btn-danger" type="reset" value="다시입력">
+                </td>
+            </tr>
+        </table>
+    </form>
+
+</body>
+
+</html>

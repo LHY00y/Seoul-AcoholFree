@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewpoint" content="width=device-width, initial-scale=1.0">
+    <title>계정수정</title>
+</head>
+
+<body>
+    계정 수정 페이지
+    <form method="post"> {% csrf_token %}
+        <table>
+            <tr>
+                <th>사용자 ID</th>
+                <td><input type="text" name="username" readonly value="{{ myinfo.username}}"></td>
+            </tr>
+            <tr>
+                <th>비밀번호</th>
+                <td><input type="password" name="password"></td>
+            </tr>
+            <tr>
+                <th>이름</th>
+                <td><input type="text" name="first_name" value="{{ myinfo.first_name }}"></td>
+            </tr>
+            <tr>
+                <th>성</th>
+                <td><input type="text" name="last_name" value="{{ myinfo.last_name }}"></td>
+            </tr>
+            <tr>
+                <th>이메일</th>
+                <td><input type="email" name="email" value="{{ myinfo.email}}"></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <input type="submit" value="계정수정">
+                    <input type="button" onclick="location.href='/'" value="취소">
+                    <input type="button" onclick="location.href='/account/userdel'" value="탈퇴">
+                </td>
+            </tr>
+
+        </table>
+
+    </form>
+
+</body>
+
+</html>
