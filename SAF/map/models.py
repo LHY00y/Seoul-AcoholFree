@@ -7,8 +7,8 @@ class Police(models.Model):
     name = models.CharField(max_length=50, null=False)
     code = models.CharField(max_length=50, null=False)
     gu = models.CharField(max_length=15)
-    longitude = models.EmailField()
-    latitude = models.CharField(max_length=100)
+    longitude = models.FloatField
+    latitude = models.FloatField
 
     def __str__(self):
         return self.name
