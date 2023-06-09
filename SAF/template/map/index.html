@@ -20,7 +20,7 @@
     </select>
     <button onclick="location.href='/account/logout'">로그아웃</button>
 
-    <button onclick="location.href='#'">관리</button>
+    <button onclick="location.href='/account/register'">관리</button>
 
 
     <div id="map" style="width:80%;height:400px;"></div>
@@ -69,7 +69,6 @@
                 }
             }
         });
-
 
         function store_marker(x, y) {
             var marker = new naver.maps.Marker({

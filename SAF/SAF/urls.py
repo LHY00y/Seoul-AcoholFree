@@ -23,6 +23,6 @@ urlpatterns = [
     path('', views.index),
     path('map/', include('map.urls')),
     path('account/', include('django.contrib.auth.urls')),
-
+    path('account/register', views.createAccount),
 
 ]
