@@ -5,6 +5,7 @@ from map.models import Police
 
 def index(request):
     if request.user.is_active:
+       
         return redirect('/map/')
     else:
         return redirect('/account/login')

@@ -23,13 +23,29 @@
 
     <div id="map" style="width:80%;height:400px;"></div>
     <script>
+
         var mapOptions = {
-            center: new naver.maps.LatLng(37.3595704, 127.105399),
+            center: new naver.maps.LatLng(193610.3786, 442802.9236),
             zoom: 15
         };
 
         var map = new naver.maps.Map('map', mapOptions);
+
+
+        function test(name, x, y) {
+            var marker = new naver.maps.Marker({
+                position: new naver.maps.LatLng(37.5112, 127.0981),
+                map: map
+            });
+        }
     </script>
+    {% for x in dt %}
+    <script>
+        test({{ x.사업장명 }}, {{ x.위도 }}, {{ x.경도 }})
+    </script>
+
+    <br>
+    {% endfor %}
 
 </body>
 
