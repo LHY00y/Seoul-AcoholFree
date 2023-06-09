@@ -6,9 +6,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
-    <title>간단한 지도 표시하기</title>
+    <title>Main</title>
     <script type="text/javascript"
         src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=mdbxo3pu0t"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
 
 </head>
 
@@ -25,27 +27,63 @@
     <script>
 
         var mapOptions = {
-            center: new naver.maps.LatLng(193610.3786, 442802.9236),
-            zoom: 15
+            center: new naver.maps.LatLng(37.487400, 126.925651),
+            zoom: 12
         };
 
         var map = new naver.maps.Map('map', mapOptions);
 
+        var csvFile = '{{ "/static/data/AlcoholAccident.csv" }}';
 
-        function test(name, x, y) {
+        Papa.parse(csvFile, {
+            download: true,
+            complete: function (results) {
+                var data = results.data;
+
+                for (var i = 1; i < data.length; i++) {
+                    var row = data[i];
+                    var name = row[0];
+                    // name : 주소
+                    var latitude = parseFloat(row[1]);
+                    // latitude : 경도
+                    var longitude = parseFloat(row[2]);
+                    // longitude : 위도
+                    var count = parseInt(row[3]);
+
+                    var location = new naver.maps.LatLng(latitude, longitude);
+
+                    var marker = new naver.maps.Marker({
+                        position: location,
+                        map: map
+                    });
+
+                    var infowindow = new naver.maps.InfoWindow({
+                        content: '<div style="padding:10px;">' + name + '</div>'
+                    });
+
+                    naver.maps.Event.addListener(marker, 'click', (function (marker, infowindow) {
+                        return function () {
+                            infowindow.open(map, marker);
+                        };
+                    })(marker, infowindow));
+                }
+            }
+        });
+
+
+        function store_marker(x, y) {
             var marker = new naver.maps.Marker({
-                position: new naver.maps.LatLng(37.5112, 127.0981),
+                position: new naver.maps.LatLng(x, y),
                 map: map
             });
         }
     </script>
 
-    {% for x in dt %}
+    {% for x in store_dt %}
     <script>
-        test({{ x.사업장명 }}, {{ x.위도 }}, {{ x.경도 }})
+        store_marker({{ x.위도 }}, {{ x.경도 }})
     </script>
 
-    <br>
     {% endfor %}
 
 
