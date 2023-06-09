@@ -83,11 +83,13 @@ elif site_name=='송파구':
     site=['잠실%20관광특구','잠실종합운동장', '잠실한강공원']
 else:
     site=[]
+
+
 #유동인구, 도로교통량, 주차장 전체 저장용
-site_df1_full=[]
-site_df2_full=[]
-site_df3_full=[]
 def RTdata():
+    site_df1_full=pd.DataFrame()
+    site_df2_full=pd.DataFrame()
+    site_df3_full=pd.DataFrame()
     #site갯수만큼 반복
     for a in range(0, len(site)):
         url = "http://openapi.seoul.go.kr:8088/5671424c567265623638585759576b/xml/citydata/1/5/"+site[a]+""
@@ -131,7 +133,10 @@ def RTdata():
         site_df1=site_df1[['장소 위치','AREA_CONGEST_LVL', 'AREA_PPLTN_MIN', 'AREA_PPLTN_MAX', 'PPLTN_TIME']]
         site_df1.rename(columns={'AREA_CONGEST_LVL':'장소 혼잡도 지표',  'AREA_PPLTN_MIN':'실시간 인구 지표 최소값', 'AREA_PPLTN_MAX':'실시간 인구 지표 최대값',  'PPLTN_TIME':'실시간 인구 데이터 업데이트 시간'},inplace=True)
         #계속 합침
-        site_df1_full.append(site_df1)
+        if site_df1_full is None:
+            site_df1_full=site_df1
+        else:
+            site_df1_full=pd.concat([site_df1_full, site_df1], ignore_index=True)
 
         # 각 행의 컬럼, 이름, 값을 가지는 리스트 만들기
         row_list2 = [] # 행값
@@ -159,7 +164,10 @@ def RTdata():
         site_df2=site_df2[['START_ND_XY', 'END_ND_XY', 'SPD', 'IDX', 'XYLIST', 'ROAD_TRAFFIC_TIME']]
         site_df2.rename(columns={'START_ND_XY':'도로노드시작지점좌표',  'END_ND_XY':'도로노드종료지점좌표', 'SPD':'도로구간평균속도', 'IDX':'도로구간소통지표', 'XYLIST': '링크아이디 좌표(보간점)', 'ROAD_TRAFFIC_TIME':'도로소통현황 업데이트 시간'},inplace=True)
         #계속 합침
-        site_df2_full.append(site_df2)
+        if site_df2_full is None:
+            site_df2_full=site_df2
+        else:
+            site_df2_full=pd.concat([site_df2_full, site_df2], ignore_index=True)
 
         # 각 행의 컬럼, 이름, 값을 가지는 리스트 만들기
         row_list3 = [] # 행값
@@ -186,5 +194,8 @@ def RTdata():
             site_df3=site_df3[['CPCTY', 'CUR_PRK_CNT', 'CUR_PRK_TIME', 'LAT', 'LNG']]
             site_df3.rename(columns={'CPCTY':'주차장 수용 가능 면수',  'CUR_PRK_CNT':'주차장 주차 가능 면수', 'CUR_PRK_TIME':'현재 주차장 주차 차량 수 업데이트 시간', 'LAT':'위도', 'LNG': '경도'},inplace=True)
             #계속 합침
-            site_df3_full.append(site_df3)
+            if site_df3_full is None:
+                site_df3_full=site_df3
+            else:
+                site_df3_full=pd.concat([site_df3_full, site_df3], ignore_index=True)
     return site_df1_full, site_df2_full, site_df3_full;
