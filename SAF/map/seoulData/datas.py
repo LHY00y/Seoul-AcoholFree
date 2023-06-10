@@ -127,11 +127,10 @@ def RTdata():
             row_list1.append(value_list1)
             # 데이터 리스트 값 초기화
             value_list1=[]
-        name_list1.append('장소 위치')
+        name_list1.append('AREA_SITE')
         #xml값 DataFrame으로 만들기
         site_df1 = pd.DataFrame(row_list1, columns=name_list1)
-        site_df1=site_df1[['장소 위치','AREA_CONGEST_LVL', 'AREA_PPLTN_MIN', 'AREA_PPLTN_MAX', 'PPLTN_TIME']]
-        site_df1.rename(columns={'AREA_CONGEST_LVL':'장소 혼잡도 지표',  'AREA_PPLTN_MIN':'실시간 인구 지표 최소값', 'AREA_PPLTN_MAX':'실시간 인구 지표 최대값',  'PPLTN_TIME':'실시간 인구 데이터 업데이트 시간'},inplace=True)
+        site_df1=site_df1[['AREA_SITE','AREA_CONGEST_LVL', 'AREA_PPLTN_MIN', 'AREA_PPLTN_MAX', 'PPLTN_TIME']]
         #계속 합침
         if site_df1_full is None:
             site_df1_full=site_df1
@@ -162,8 +161,6 @@ def RTdata():
         #xml값 DataFrame으로 만들기
         site_df2 = pd.DataFrame(row_list2, columns=name_list2)
         site_df2=site_df2[['START_ND_XY', 'END_ND_XY', 'SPD', 'IDX', 'XYLIST', 'ROAD_TRAFFIC_TIME']]
-        site_df2.rename(columns={'START_ND_XY':'도로노드시작지점좌표',  'END_ND_XY':'도로노드종료지점좌표', 'SPD':'도로구간평균속도', 'IDX':'도로구간소통지표', 'XYLIST': '링크아이디 좌표(보간점)', 'ROAD_TRAFFIC_TIME':'도로소통현황 업데이트 시간'},inplace=True)
-        #계속 합침
         if site_df2_full is None:
             site_df2_full=site_df2
         else:
@@ -192,8 +189,6 @@ def RTdata():
         if len(name_list3) != 0:
             site_df3 = pd.DataFrame(row_list3, columns=name_list3)
             site_df3=site_df3[['CPCTY', 'CUR_PRK_CNT', 'CUR_PRK_TIME', 'LAT', 'LNG']]
-            site_df3.rename(columns={'CPCTY':'주차장 수용 가능 면수',  'CUR_PRK_CNT':'주차장 주차 가능 면수', 'CUR_PRK_TIME':'현재 주차장 주차 차량 수 업데이트 시간', 'LAT':'위도', 'LNG': '경도'},inplace=True)
-            #계속 합침
             if site_df3_full is None:
                 site_df3_full=site_df3
             else:

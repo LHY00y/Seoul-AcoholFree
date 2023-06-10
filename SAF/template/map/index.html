@@ -71,9 +71,9 @@
                 map: map
             });
         }
-        function park_site(x,y){
-            var marker=new naver.maps.Marker({
-                position: new naver.maps.LatLng(x,y),
+        function park_site(x, y) {
+            var marker = new naver.maps.Marker({
+                position: new naver.maps.LatLng(x, y),
                 map: map
             });
         }//주차장 출력(안됨)
@@ -87,14 +87,10 @@
     {% endfor %}
     {% for i in parks%}
     <script>
-        park_site({{i.위도}},{{i.경도}})
+        park_site({{ i.LAT }}, {{ i.LNG }})
     </script>
     {% endfor %}
-    {% for i in parks%}
-    <script>
-        park_site({{i.위도}},{{i.경도}})
-    </script>
-    {% endfor %}
+
 </body>
 
 </html>

@@ -15,8 +15,8 @@ def index(request):
     RTdat=RTdata()
     context = {
         'store_dt': store_dt,
-        'pops':RTdat[0],
-        'roads':RTdat[1],
-        'parks':RTdat[2].to_dict()
+        'pops':RTdat[0].to_dict('records'),
+        'roads':RTdat[1].to_dict('records'),
+        'parks':RTdat[2].to_dict('records')
     }
     return render(request, 'map/index.html', context)
