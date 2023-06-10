@@ -92,10 +92,9 @@
     {% endfor %}
     {% for i in parks%}
     <script>
-        park_site({{i.위도}},{{i.경도}})
+        park_site({{i.LAT}},{{i.LNG}})
     </script>
     {% endfor %}
-
 
 </body>
 
