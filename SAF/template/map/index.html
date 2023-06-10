@@ -6,12 +6,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
-    <title>Main</title>
+    <title>간단한 지도 표시하기</title>
     <script type="text/javascript"
         src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=mdbxo3pu0t"></script>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
-
 </head>
 
 <body>
@@ -19,19 +17,17 @@
         <option value="gu">ㅇㅇ구</option>
     </select>
     <button onclick="location.href='/account/logout'">로그아웃</button>
-
     <button onclick="location.href='/account/register'">관리</button>
-
-
     <div id="map" style="width:80%;height:400px;"></div>
+    {% load static %}
     <script>
-
         var mapOptions = {
-            center: new naver.maps.LatLng(37.487400, 126.925651),
+            center: new naver.maps.LatLng(37.5595704, 126.97535),
             zoom: 12
         };
 
         var map = new naver.maps.Map('map', mapOptions);
+
 
         var csvFile = '{{ "/static/data/AlcoholAccident.csv" }}';
 
@@ -69,7 +65,6 @@
                 }
             }
         });
-
         function store_marker(x, y) {
             var marker = new naver.maps.Marker({
                 position: new naver.maps.LatLng(x, y),
@@ -84,8 +79,6 @@
     </script>
 
     {% endfor %}
-
-
 </body>
 
 </html>
