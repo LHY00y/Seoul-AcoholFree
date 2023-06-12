@@ -6,75 +6,62 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
-    <title>간단한 지도 표시하기</title>
+    <title>Main</title>
     <script type="text/javascript"
         src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=mdbxo3pu0t"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+
 </head>
 
 <body>
-    <select>
-        <option value="gu">ㅇㅇ구</option>
+    <select id="guSelect">
+        <option>선택</option>
+        <option value="강남구">강남구</option>
+        <option value="강동구">강동구</option>
+        <option value="강북구">강북구</option>
+        <option value="강서구">강서구</option>
+        <option value="관악구">관악구</option>
+        <option value="광진구">광진구</option>
+        <option value="구로구">구로구</option>
+        <option value="금천구">금천구</option>
+        <option value="노원구">노원구</option>
+        <option value="도봉구">도봉구</option>
+        <option value="동대문구">동대문구</option>
+        <option value="동작구">동작구</option>
+        <option value="마포구">마포구</option>
+        <option value="서대문구">서대문구</option>
+        <option value="서초구">서초구</option>
+        <option value="성동구">성동구</option>
+        <option value="성북구">성북구</option>
+        <option value="송파구">송파구</option>
+        <option value="양천구">양천구</option>
+        <option value="영등포구">영등포구</option>
+        <option value="용산구">용산구</option>
+        <option value="은평구">은평구</option>
+        <option value="종로구">종로구</option>
+        <option value="중구">중구</option>
+        <option value="중랑구">중랑구</option>
+        <!-- 추가적인 옵션들을 이곳에 나열할 수 있습니다 -->
     </select>
+    <button class="findGuArea" onclick="findGuArea()">구 검색</button>
     <button onclick="location.href='/account/logout'">로그아웃</button>
+
     <button onclick="location.href='#'">관리</button>
+
+
     <div id="map" style="width:80%;height:400px;"></div>
     {% load static %}
     <script>
+
         var mapOptions = {
-            center: new naver.maps.LatLng(37.5595704, 126.97535), 
-            zoom: 12 
+            center: new naver.maps.LatLng(37.3595704, 127.105399),
+            zoom: 15
         };
 
+
         var map = new naver.maps.Map('map', mapOptions);
-<<<<<<< Updated upstream
-=======
-        var marker = new naver.maps.Marker({
-        position: new naver.maps.LatLng(37.3595704, 127.105399),
-        map: map
-        });
-        
     </script>
->>>>>>> Stashed changes
+    {% endfor %}
 
-        
-        var csvFile = '{{ "/static/data/AlcoholAccident.csv" }}';
-                
-        Papa.parse(csvFile, {
-            download: true,
-            complete: function(results) {
-                var data = results.data;
-
-                for (var i = 1; i < data.length; i++) {
-                    var row = data[i];
-                    var name = row[0];
-                    // name : 주소
-                    var latitude = parseFloat(row[1]);
-                    // latitude : 경도
-                    var longitude = parseFloat(row[2]);
-                    // longitude : 위도
-                    var count = parseInt(row[3]);
-
-                    var location = new naver.maps.LatLng(latitude, longitude);
-
-                    var marker = new naver.maps.Marker({
-                        position: location,
-                        map: map
-                    });
-
-                    var infowindow = new naver.maps.InfoWindow({
-                        content: '<div style="padding:10px;">' + name + '</div>'
-                    });
-
-                    naver.maps.Event.addListener(marker, 'click', (function(marker, infowindow) {
-                        return function() {
-                            infowindow.open(map, marker);
-                        };
-                    })(marker, infowindow));
-                }
-            }
-        });
-    </script>
 </body>
 
 </html>
