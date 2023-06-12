@@ -6,13 +6,16 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <title>간단한 지도 표시하기</title>
     <title>Main</title>
     <script type="text/javascript"
         src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=mdbxo3pu0t"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
 </head>
 
 <body>
+    <select>
+        <option value="gu">ㅇㅇ구</option>
     <select id="guSelect">
         <option>선택</option>
         <option value="강남구">강남구</option>
@@ -44,21 +47,71 @@
     </select>
     <button class="findGuArea" onclick="findGuArea()">구 검색</button>
     <button onclick="location.href='/account/logout'">로그아웃</button>
-
     <button onclick="location.href='#'">관리</button>
-
-
     <div id="map" style="width:80%;height:400px;"></div>
     {% load static %}
     <script>
 
         var mapOptions = {
-            center: new naver.maps.LatLng(37.3595704, 127.105399),
-            zoom: 15
+            center: new naver.maps.LatLng(37.5595704, 126.97535), 
+            zoom: 12 
+
+            
+            center: new naver.maps.LatLng(37.487400, 126.925651),
+            zoom: 12,
+            mapTypeId: 'normal',
+            scaleControl: true,
+            logoControl: false,
+            mapDataControl: true,
+            minZoom: 6, // 최소 줌
+            zoomControl: true, // 줌 컨트롤 패널 보이기
+            zoomControlOptions: {
+                style: naver.maps.ZoomControlStyle.LARGE, // 줌 컨트롤 패널 크기
+                position: naver.maps.Position.TOP_RIGHT // 줌 컨트롤 패널 위치
+            }    
+         c25c4a07f3db41be5f76d8e0d22edade85e96e2a
         };
 
 
         var map = new naver.maps.Map('map', mapOptions);
+var data = results.data;
+
+for (var i = 1; i < data.length; i++) {
+    var name = data[i].name;
+    var marker = new naver.maps.Marker({
+        position: new naver.maps.LatLng(data[i].lat, data[i].lng),
+        map: map
+    });
+    var infowindow = new naver.maps.InfoWindow({
+        content: '<div style="padding:10px;">' + name + '</div>'
+    });
+
+    naver.maps.Event.addListener(marker, 'click', (function(marker, infowindow) {
+        return function() {
+            infowindow.open(map, marker);
+        };
+    })(marker, infowindow));
+}
+    </script>
+
+    {% for x in store_dt %}
+    <script>
+        store_marker({{ x.위도 }}, {{ x.경도 }})
+    </script>
+    {% endfor %}
+    {% for i in pops %}
+    <script>
+        site_point('{{i.AREA_XY}}')
+    </script>
+    {% endfor %}
+    {% for i in roads%}
+    <script>
+        road_site('{{i.XYLIST}}' , '{{i.IDX}}', '{{i.SPD}}')
+    </script>
+    {% endfor %}
+    {% for i in parks%}
+    <script>
+        park_site({{i.LAT}},{{i.LNG}})
     </script>
     {% endfor %}
 
