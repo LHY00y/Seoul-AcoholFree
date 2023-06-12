@@ -163,13 +163,23 @@
                 map: map
             });
         }
-        function road_site(start, middle, end){
+        function road_site(start, middle, end, idx, speed){
             var start_dot=[];
             var end_dot=[];
             var middle_dot=[];
+            var road_color;
             start_dot=start.split('_');
             end_dot=end.split('_');
             middle_dot=middle.split('|');
+            if(idx=='원활'){
+                road_color='#90EE90';
+            }else if(idx=='서행'){
+                road_color='#ff7f00';
+            }else if(idx=='정체'){
+                road_color='#ff0000';
+            }else{
+                road_color='#000000';
+            }
             var path=[];
             path.push(new naver.maps.LatLng(start_dot[1],start_dot[0]));
             for(var i=0;i<middle_dot.length;i++){
@@ -180,9 +190,9 @@
             path.push(new naver.maps.LatLng(end_dot[1],end_dot[0]));
             var polyline=new naver.maps.Polyline({
                 map: map,
-                strokeColor: '#90EE90', // 선 색
-                strokeOpacity: 0.4, // 투명도
-                strokeWeight: 4,
+                strokeColor: road_color, // 선 색
+                strokeOpacity: 0.3, // 투명도
+                strokeWeight: 3,
                 zIndex: 1,
                 clickable: true,
                 path: path
@@ -200,11 +210,11 @@
     <script>
         store_marker({{ x.위도 }}, {{ x.경도 }})
     </script>
+    {% endfor %}
     {% for i in roads%}
     <script>
-        road_site('{{i.START_ND_XY}}','{{i.XYLIST}}' ,'{{i.END_ND_XY}}')
+        road_site('{{i.START_ND_XY}}','{{i.XYLIST}}' ,'{{i.END_ND_XY}}', '{{i.IDX}}')
     </script>
-    {% endfor %}
     {% endfor %}
     {% for i in parks%}
     <script>
