@@ -84,43 +84,6 @@ elif site_name=='송파구':
 else:
     site=[]
 
-if site_name=='강남구':
-    site_xy=['127.02332595771327_37.52079234636055', '127.05921560000002_37.51179797078281', '127.02620999999999_37.50005','127.04843789999995_37.5057841', '127.04070939999997_37.52781279999999', '127.03679_37.501390000000015']
-elif site_name=='금천구':
-    site_xy=['126.88263061_37.48151949']
-elif site_name=='광진구':
-    site_xy=['건대입구역', '뚝섬한강공원']
-elif site_name=='종로구':
-    site_xy=['경복궁·서촌마을', '낙산공원·이화마을', '북촌한옥마을', '인사동·익선동', '종로·청계%20관광특구','창덕궁·종묘']
-elif site_name=='서초구':
-    site_xy=['고속터미널역','교대역','반포한강공원']
-elif site_name=='중구':
-    site_xy=['광화문·덕수궁', '동대문%20관광특구', '명동%20관광특구', '서울역']
-elif site_name=='구로구':
-    site_xy=['구로디지털단지역','신도림역']
-elif site_name=='용산구':
-    site_xy=['국립중앙박물관·용산가족공원','남산공원','용산역','이촌한강공원','이태원%20관광특구']
-elif site_name=='동작구':
-    site_xy=['노량진']
-elif site_name=='마포구':
-    site_xy=['망원한강공원', '신촌·이대역','월드컵공원','홍대%20관광특구', 'DMC(디지털미디어시티)']
-elif site_name=='강북구':
-    site_xy=['북서울꿈의숲', '수유리%20먹자골목']
-elif site_name=='성동구':
-    site_xy=['서울숲공원', '성수카페거리', '왕십리역']
-elif site_name=='관악구':
-    site=['신림역']
-elif site_name=='도봉구':
-    site_xy=['쌍문동%20맛집거리', '창동%20신경제%20중심지']
-elif site_name=='영등포구':
-    site_xy=['여의도', '영등포%20타임스퀘어']
-elif site_name=='은평구':
-    site_xy=['연신내역']
-elif site_name=='송파구':
-    site_xy=['잠실%20관광특구','잠실종합운동장', '잠실한강공원']
-else:
-    site_xy=[]
-
 
 #유동인구, 도로교통량, 주차장 전체 저장용
 def RTdata():
@@ -160,16 +123,14 @@ def RTdata():
                 # 컬럼의 각 데이터 값 저장
                 value_list1.append(columns[j].text)
             value_list1.append(site[a])
-            value_list1.append(site_xy[a])
             # 각 행의 value값 전체 저장
             row_list1.append(value_list1)
             # 데이터 리스트 값 초기화
             value_list1=[]
         name_list1.append('AREA_SITE')
-        name_list1.append('AREA_XY')
         #xml값 DataFrame으로 만들기
         site_df1 = pd.DataFrame(row_list1, columns=name_list1)
-        site_df1=site_df1[['AREA_SITE','AREA_XY','AREA_CONGEST_LVL', 'AREA_PPLTN_MIN', 'AREA_PPLTN_MAX', 'PPLTN_TIME']]
+        site_df1=site_df1[['AREA_SITE','AREA_CONGEST_LVL', 'AREA_PPLTN_MIN', 'AREA_PPLTN_MAX', 'PPLTN_TIME']]
         #계속 합침
         if site_df1_full is None:
             site_df1_full=site_df1
