@@ -11,33 +11,39 @@
         src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=mdbxo3pu0t"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
-    <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?clientId=YOUR_CLIENT_ID&submodules=visualization"></script>
+    <script type="text/javascript"
+        src="https://openapi.map.naver.com/openapi/v3/maps.js?clientId=mdbxo3pu0t&submodules=visualization"></script>
+    <script type="text/javascript"
+        src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=ncpClientId&submodules=geocoder"></script>
     <!-- 행정구역 테두리 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fetch-jsonp/1.1.3/fetch-jsonp.min.js"></script>
     <script>
+        var map_longitude = 37.5633647
+        var map_latitude = 126.9674929
+
         var map;
         var polyline;
         function findGuArea() {
             var selectGuName = document.getElementById("guSelect");
             var selectedValue = selectGuName.options[selectGuName.selectedIndex].value;
-            var searchGu = "https://api.vworld.kr/req/data?service=data&request=GetFeature&data=LT_C_ADSIGG_INFO&key=D60D697E-DA1B-3C03-B045-CC469028D5FB&domain=127.0.0.1:8000/&attrFilter=sig_kor_nm:like:"+selectedValue;
-            if(polyline){
+            var searchGu = "https://api.vworld.kr/req/data?service=data&request=GetFeature&data=LT_C_ADSIGG_INFO&key=D60D697E-DA1B-3C03-B045-CC469028D5FB&domain=127.0.0.1:8000/&attrFilter=sig_kor_nm:like:" + selectedValue;
+            if (polyline) {
                 polyline.setMap(null);
             }
             // map = new naver.maps.Map('map', mapOptions);
             fetchJsonp(searchGu)
-                .then(function(response) {
+                .then(function (response) {
                     return response.json();
                 })
-                .then(function(data) {
+                .then(function (data) {
                     // 응답 데이터를 처리하고 지도에 경계선을 그리는 작업 수행
                     console.log(data); // 응답 데이터 콘솔에 출력
-                    
+
                     // 경계선을 그리기 위한 좌표 데이터 추출
                     var coordinates = [];
                     console.log(coordinates)
                     var features = data.response.result.featureCollection.features;
-                    for (var i = 0; i <  features[0].geometry.coordinates[0][0].length; i++) {
+                    for (var i = 0; i < features[0].geometry.coordinates[0][0].length; i++) {
                         var feature = features[0].geometry.coordinates[0][0][i];
                         var x = feature[0];
                         var y = feature[1];
@@ -56,9 +62,39 @@
                     });
                     map.setCenter(location);
                 })
-                .catch(function(error) {
+                .catch(function (error) {
                     console.log('API 요청 중 오류 발생:', error);
                 });
+        }
+
+        window.onload = function () {
+            naver.maps.Service.geocode({
+                query: '{{police_table.address}}'
+            }, function (status, response) {
+                if (status === naver.maps.Service.Status.ERROR) {
+                    return alert('Something Wrong!');
+                }
+                if (response.v2.meta.totalCount === 0) {
+                    return alert('올바른 주소를 입력해주세요.');
+                }
+                var htmlAddresses = [],
+                    item = response.v2.addresses[0],
+                    point = new naver.maps.Point(item.x, item.y);
+                if (item.roadAddress) {
+                    htmlAddresses.push('[도로명 주소] ' + item.roadAddress);
+                }
+                if (item.jibunAddress) {
+                    htmlAddresses.push('[지번 주소] ' + item.jibunAddress);
+                }
+                if (item.englishAddress) {
+                    htmlAddresses.push('[영문명 주소] ' + item.englishAddress);
+                }
+
+                map_longitude = item.y
+                map_latitude = item.x
+                map.setCenter(new naver.maps.LatLng(map_longitude, map_latitude))
+                console.log(map_latitude, map_longitude)
+            });
         }
     </script>
 </head>
@@ -95,15 +131,12 @@
     </select>
     <button class="findGuArea" onclick="findGuArea()">구 검색</button>
     <button onclick="location.href='/account/logout'">로그아웃</button>
-
     <button onclick="location.href='/account/register'">관리</button>
-
 
     <div id="map" style="width:80%;height:400px;"></div>
     <script>
-
         var mapOptions = {
-            center: new naver.maps.LatLng(37.487400, 126.925651),
+            center: new naver.maps.LatLng(map_longitude, map_latitude),
             zoom: 12,
             mapTypeId: 'normal',
             scaleControl: true,
@@ -114,68 +147,68 @@
             zoomControlOptions: {
                 style: naver.maps.ZoomControlStyle.LARGE, // 줌 컨트롤 패널 크기
                 position: naver.maps.Position.TOP_RIGHT // 줌 컨트롤 패널 위치
-            }    
+            }
         };
 
 
-        var map = new naver.maps.Map('map', mapOptions);
+        map = new naver.maps.Map('map', mapOptions);
 
-var csvFile = '{{ "/static/data/AlcoholAccident.csv" }}';
+        var csvFile = '{{ "/static/data/AlcoholAccident.csv" }}';
 
-Papa.parse(csvFile, {
-    download: true,
-    complete: function (results) {
-        var data = results.data;
+        Papa.parse(csvFile, {
+            download: true,
+            complete: function (results) {
+                var data = results.data;
 
-        for (var i = 1; i < data.length; i++) {
-            var row = data[i];
-            var name = row[0];
-            // name: 주소
-            var latitude = parseFloat(row[1]);
-            // latitude: 경도
-            var longitude = parseFloat(row[2]);
-            // longitude: 위도
-            var count = parseInt(row[3]);
-            // count :발생건수 
+                for (var i = 1; i < data.length; i++) {
+                    var row = data[i];
+                    var name = row[0];
+                    // name: 주소
+                    var latitude = parseFloat(row[1]);
+                    // latitude: 경도
+                    var longitude = parseFloat(row[2]);
+                    // longitude: 위도
+                    var count = parseInt(row[3]);
+                    // count :발생건수 
 
-            var location = new naver.maps.LatLng(latitude, longitude);
+                    var location = new naver.maps.LatLng(latitude, longitude);
 
-            var iconUrl;
-            if (count === 3) {
-                iconUrl = '{{"/static/data/accident3.jpg"}}';
-            } else if (count === 4) {
-                iconUrl = '{{"/static/data/accident4.jpg"}}';
-            } else if (count === 5) {
-                iconUrl = '{{"/static/data/accident5.jpg"}}';
-            } else if (count === 6) {
-                iconUrl = '{{"/static/data/accident6.jpg"}}';
-            } 
-                
-            
+                    var iconUrl;
+                    if (count === 3) {
+                        iconUrl = '{{"/static/data/accident3.jpg"}}';
+                    } else if (count === 4) {
+                        iconUrl = '{{"/static/data/accident4.jpg"}}';
+                    } else if (count === 5) {
+                        iconUrl = '{{"/static/data/accident5.jpg"}}';
+                    } else if (count === 6) {
+                        iconUrl = '{{"/static/data/accident6.jpg"}}';
+                    }
 
-            var marker = new naver.maps.Marker({
-                position: location,
-                map: map,
-                icon: {
-                    url: iconUrl,
-                    size: new naver.maps.Size(800, 600), 
-                    origin: new naver.maps.Point(0, 0),
-                    anchor: new naver.maps.Point(25, 26) 
+
+
+                    var marker = new naver.maps.Marker({
+                        position: location,
+                        map: map,
+                        icon: {
+                            url: iconUrl,
+                            size: new naver.maps.Size(800, 600),
+                            origin: new naver.maps.Point(0, 0),
+                            anchor: new naver.maps.Point(25, 26)
+                        }
+                    });
+
+                    var infowindow = new naver.maps.InfoWindow({
+                        content: '<div style="padding:10px;">' + name + '</div>'
+                    });
+
+                    naver.maps.Event.addListener(marker, 'click', (function (marker, infowindow) {
+                        return function () {
+                            infowindow.open(map, marker);
+                        };
+                    })(marker, infowindow));
                 }
-            });
-
-            var infowindow = new naver.maps.InfoWindow({
-                content: '<div style="padding:10px;">' + name + '</div>'
-            });
-
-            naver.maps.Event.addListener(marker, 'click', (function (marker, infowindow) {
-                return function () {
-                    infowindow.open(map, marker);
-                };
-            })(marker, infowindow));
-        }
-    }
-});
+            }
+        });
 
         function store_marker(x, y) {
             var marker = new naver.maps.Marker({
@@ -183,75 +216,75 @@ Papa.parse(csvFile, {
                 map: map
             });
         }
-        function site_point(xy, text, min, max){
-            var xy_dot=[];
+        function site_point(xy, text, min, max) {
+            var xy_dot = [];
             var site_color;
             var rnd_size;
-            xy_dot=xy.split('_');
-            if(text=='여유'){
-                site_color='#90EE90';
-            }else if(text=='보통'){
-                site_color='#e5d34d';
-            }else if(text=='약간 붐빔'){
-                site_color='#ff7f00';
-            }else if(text=='붐빔'){
-                site_color='#ff0000';
-            }else{
-                site_color='#000000';
+            xy_dot = xy.split('_');
+            if (text == '여유') {
+                site_color = '#90EE90';
+            } else if (text == '보통') {
+                site_color = '#e5d34d';
+            } else if (text == '약간 붐빔') {
+                site_color = '#ff7f00';
+            } else if (text == '붐빔') {
+                site_color = '#ff0000';
+            } else {
+                site_color = '#000000';
             }
-            if((min+max)>130000){
-                rnd_size=33;
-            }else if((min+max)>110000){
-                rnd_size=30;
-            }else if((min+max)>90000){
-                rnd_size=27;
-            }else if((min+max)>70000){
-                rnd_size=24;
-            }else if((min+max)>50000){
-                rnd_size=21;
-            }else if((min+max)>30000){
-                rnd_size=18;
-            }else{
-                rnd_size=15;
+            if ((min + max) > 130000) {
+                rnd_size = 33;
+            } else if ((min + max) > 110000) {
+                rnd_size = 30;
+            } else if ((min + max) > 90000) {
+                rnd_size = 27;
+            } else if ((min + max) > 70000) {
+                rnd_size = 24;
+            } else if ((min + max) > 50000) {
+                rnd_size = 21;
+            } else if ((min + max) > 30000) {
+                rnd_size = 18;
+            } else {
+                rnd_size = 15;
             }
             var dotmap = new naver.maps.visualization.DotMap({
                 map: map,
                 data: [new naver.maps.LatLng(xy_dot[1], xy_dot[0])],
                 opacity: 0.5,
-                radius:rnd_size,
-                clickable:true,
+                radius: rnd_size,
+                clickable: true,
                 fillColor: site_color
             });
             var sitepop = new naver.maps.InfoWindow({
-                    content: '<div style="padding:10px;">최소 인구 : '+min+'</div><div style="padding:10px;">최대 인구 : ' + max + '</div>'
-                });
-                naver.maps.Event.addListener(dotmap, 'click', (function (dotmap, sitepop) {
-                    return function () {
-                        var latlng = new naver.maps.LatLng(xy_dot[1], xy_dot[0]);
-                        sitepop.open(map, dotmap);
-                    };
-                })(dotmap, sitepop));
+                content: '<div style="padding:10px;">최소 인구 : ' + min + '</div><div style="padding:10px;">최대 인구 : ' + max + '</div>'
+            });
+            naver.maps.Event.addListener(dotmap, 'click', (function (dotmap, sitepop) {
+                return function () {
+                    var latlng = new naver.maps.LatLng(xy_dot[1], xy_dot[0]);
+                    sitepop.open(map, dotmap);
+                };
+            })(dotmap, sitepop));
         }
-        function road_site(middle, idx, speed){
-            var dots=[];
+        function road_site(middle, idx, speed) {
+            var dots = [];
             var road_color;
-            dots=middle.split('|');
-            if(idx=='원활'){
-                road_color='#90EE90';
-            }else if(idx=='서행'){
-                road_color='#ff7f00';
-            }else if(idx=='정체'){
-                road_color='#ff0000';
-            }else{
-                road_color='#000000';
+            dots = middle.split('|');
+            if (idx == '원활') {
+                road_color = '#90EE90';
+            } else if (idx == '서행') {
+                road_color = '#ff7f00';
+            } else if (idx == '정체') {
+                road_color = '#ff0000';
+            } else {
+                road_color = '#000000';
             }
-            var path=[];
-            for(var i=0;i<dots.length;i++){
-                var middle_m=[]
-                middle_m=dots[i].split('_');
-                path.push(new naver.maps.LatLng(middle_m[1],middle_m[0]));
+            var path = [];
+            for (var i = 0; i < dots.length; i++) {
+                var middle_m = []
+                middle_m = dots[i].split('_');
+                path.push(new naver.maps.LatLng(middle_m[1], middle_m[0]));
             }
-            var polyline=new naver.maps.Polyline({
+            var polyline = new naver.maps.Polyline({
                 map: map,
                 strokeColor: road_color, // 선 색
                 strokeOpacity: 0.6, // 투명도
@@ -261,18 +294,18 @@ Papa.parse(csvFile, {
                 path: path
             });
         }
-        function park_site(x,y, prkfull, prkcnt){
-            if(prkcnt==null){
+        function park_site(x, y, prkfull, prkcnt) {
+            if (prkcnt == null) {
 
             }
-            else{
-                var marker=new naver.maps.Marker({
-                    position: new naver.maps.LatLng(x,y),
+            else {
+                var marker = new naver.maps.Marker({
+                    position: new naver.maps.LatLng(x, y),
                     map: map
                 });
-                var prkref='주차된 차량 : '+(prkfull-prkcnt);
+                var prkref = '주차된 차량 : ' + (prkfull - prkcnt);
                 var prkInf = new naver.maps.InfoWindow({
-                    content: '<div style="padding:10px;">주차장 수용량 : '+prkfull+'</div><div style="padding:10px;">' + prkref + '</div>'
+                    content: '<div style="padding:10px;">주차장 수용량 : ' + prkfull + '</div><div style="padding:10px;">' + prkref + '</div>'
                 });
                 naver.maps.Event.addListener(marker, 'click', (function (marker, prkInf) {
                     return function () {
@@ -282,29 +315,30 @@ Papa.parse(csvFile, {
                 })(marker, prkInf));
             }
         }
+
+
     </script>
 
     {% for x in store_dt %}
     <script>
-        store_marker({{ x.위도 }}, {{ x.경도 }})
+        store_marker('{{ x.위도 }}', '{{ x.경도 }}')
     </script>
     {% endfor %}
     {% for i in pops %}
     <script>
-        site_point('{{i.AREA_XY}}','{{i.AREA_CONGEST_LVL}}',{{i.AREA_PPLTN_MIN}},{{i.AREA_PPLTN_MAX}})
+        site_point('{{i.AREA_XY}}', '{{i.AREA_CONGEST_LVL}}', '{{ i.AREA_PPLTN_MIN }}', '{{ i.AREA_PPLTN_MAX }}')
     </script>
     {% endfor %}
     {% for i in roads%}
     <script>
-        road_site('{{i.XYLIST}}' , '{{i.IDX}}', '{{i.SPD}}')
+        road_site('{{i.XYLIST}}', '{{i.IDX}}', '{{i.SPD}}')
     </script>
     {% endfor %}
     {% for i in parks%}
     <script>
-        park_site({{i.LAT}},{{i.LNG}}, {{i.CPCTY}}, {{i.CUR_PRK_CNT}})
+        park_site('{{ i.LAT }}', '{{ i.LNG }}', '{{ i.CPCTY }}', '{{ i.CUR_PRK_CNT }}')
     </script>
     {% endfor %}
-
 </body>
 
 </html>
