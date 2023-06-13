@@ -183,16 +183,54 @@ Papa.parse(csvFile, {
                 map: map
             });
         }
-        function site_point(xy, min, max, msg){
+        function site_point(xy, text, min, max){
             var xy_dot=[];
-            var population=(min+max)/2;
+            var site_color;
+            var rnd_size;
             xy_dot=xy.split('_');
+            if(text=='여유'){
+                site_color='#90EE90';
+            }else if(text=='보통'){
+                site_color='#e5d34d';
+            }else if(text=='약간 붐빔'){
+                site_color='#ff7f00';
+            }else if(text=='붐빔'){
+                site_color='#ff0000';
+            }else{
+                site_color='#000000';
+            }
+            if((min+max)>130000){
+                rnd_size=33;
+            }else if((min+max)>110000){
+                rnd_size=30;
+            }else if((min+max)>90000){
+                rnd_size=27;
+            }else if((min+max)>70000){
+                rnd_size=24;
+            }else if((min+max)>50000){
+                rnd_size=21;
+            }else if((min+max)>30000){
+                rnd_size=18;
+            }else{
+                rnd_size=15;
+            }
             var dotmap = new naver.maps.visualization.DotMap({
                 map: map,
                 data: [new naver.maps.LatLng(xy_dot[1], xy_dot[0])],
-                opacity: 0.7,
-                radius:25
-            });//가중치 두려면 형식을 바꿔야함
+                opacity: 0.5,
+                radius:rnd_size,
+                clickable:true,
+                fillColor: site_color
+            });
+            var sitepop = new naver.maps.InfoWindow({
+                    content: '<div style="padding:10px;">최소 인구 : '+min+'</div><div style="padding:10px;">최대 인구 : ' + max + '</div>'
+                });
+                naver.maps.Event.addListener(dotmap, 'click', (function (dotmap, sitepop) {
+                    return function () {
+                        var latlng = new naver.maps.LatLng(xy_dot[1], xy_dot[0]);
+                        sitepop.open(map, dotmap);
+                    };
+                })(dotmap, sitepop));
         }
         function road_site(middle, idx, speed){
             var dots=[];
@@ -208,29 +246,42 @@ Papa.parse(csvFile, {
                 road_color='#000000';
             }
             var path=[];
-            //path.push(new naver.maps.LatLng(start_dot[1],start_dot[0]));
             for(var i=0;i<dots.length;i++){
                 var middle_m=[]
                 middle_m=dots[i].split('_');
                 path.push(new naver.maps.LatLng(middle_m[1],middle_m[0]));
             }
-            //path.push(new naver.maps.LatLng(end_dot[1],end_dot[0]));
             var polyline=new naver.maps.Polyline({
                 map: map,
                 strokeColor: road_color, // 선 색
-                strokeOpacity: 0.3, // 투명도
-                strokeWeight: 3,
+                strokeOpacity: 0.6, // 투명도
+                strokeWeight: 4,
                 zIndex: 1,
                 clickable: true,
                 path: path
             });
         }
-        function park_site(x,y){
-            var marker=new naver.maps.Marker({
-                position: new naver.maps.LatLng(x,y),
-                map: map
-            });
-        }//주차장 출력(안됨)
+        function park_site(x,y, prkfull, prkcnt){
+            if(prkcnt==null){
+
+            }
+            else{
+                var marker=new naver.maps.Marker({
+                    position: new naver.maps.LatLng(x,y),
+                    map: map
+                });
+                var prkref='주차된 차량 : '+(prkfull-prkcnt);
+                var prkInf = new naver.maps.InfoWindow({
+                    content: '<div style="padding:10px;">주차장 수용량 : '+prkfull+'</div><div style="padding:10px;">' + prkref + '</div>'
+                });
+                naver.maps.Event.addListener(marker, 'click', (function (marker, prkInf) {
+                    return function () {
+                        var latlng = new naver.maps.LatLng(37.3595704, 127.105399);
+                        prkInf.open(map, marker);
+                    };
+                })(marker, prkInf));
+            }
+        }
     </script>
 
     {% for x in store_dt %}
@@ -240,7 +291,7 @@ Papa.parse(csvFile, {
     {% endfor %}
     {% for i in pops %}
     <script>
-        site_point('{{i.AREA_XY}}','{{i.AREA_PPLTN_MIN}}','{{i.AREA_PPLTN_MAX}}','{{i.AREA_CONGEST_LVL}}')
+        site_point('{{i.AREA_XY}}','{{i.AREA_CONGEST_LVL}}',{{i.AREA_PPLTN_MIN}},{{i.AREA_PPLTN_MAX}})
     </script>
     {% endfor %}
     {% for i in roads%}
@@ -250,7 +301,7 @@ Papa.parse(csvFile, {
     {% endfor %}
     {% for i in parks%}
     <script>
-        park_site({{i.LAT}},{{i.LNG}})
+        park_site({{i.LAT}},{{i.LNG}}, {{i.CPCTY}}, {{i.CUR_PRK_CNT}})
     </script>
     {% endfor %}
 
