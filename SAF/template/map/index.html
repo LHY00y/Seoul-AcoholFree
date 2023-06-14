@@ -286,37 +286,38 @@
                 site_color = '#000000';
             }
             if ((min + max) > 130000) {
-                rnd_size = 33;
+                rnd_size = 600;
             } else if ((min + max) > 110000) {
-                rnd_size = 30;
+                rnd_size = 500;
             } else if ((min + max) > 90000) {
-                rnd_size = 27;
+                rnd_size = 400;
             } else if ((min + max) > 70000) {
-                rnd_size = 24;
+                rnd_size = 300;
             } else if ((min + max) > 50000) {
-                rnd_size = 21;
+                rnd_size = 200;
             } else if ((min + max) > 30000) {
-                rnd_size = 18;
+                rnd_size = 100;
             } else {
-                rnd_size = 15;
+                rnd_size = 80;
             }
-            var dotmap = new naver.maps.visualization.DotMap({
+            var circle = new naver.maps.Circle({
                 map: map,
-                data: [new naver.maps.LatLng(xy_dot[1], xy_dot[0])],
-                opacity: 0.5,
+                center: new naver.maps.LatLng(xy_dot[1], xy_dot[0]),
+                fillOpacity: 0.4,
                 radius: rnd_size,
                 clickable: true,
-                fillColor: site_color
+                fillColor: site_color,
+                strokeColor: site_color
             });
             var sitepop = new naver.maps.InfoWindow({
                 content: '<div style="padding:10px;">최소 인구 : ' + min + '</div><div style="padding:10px;">최대 인구 : ' + max + '</div>'
             });
-            naver.maps.Event.addListener(dotmap, 'click', (function (dotmap, sitepop) {
+            naver.maps.Event.addListener(circle, 'click', (function (circle, sitepop) {
                 return function () {
                     var latlng = new naver.maps.LatLng(xy_dot[1], xy_dot[0]);
-                    sitepop.open(map, dotmap);
+                    sitepop.open(map, circle);
                 };
-            })(dotmap, sitepop));
+            })(circle, sitepop));
         }
         function road_site(middle, idx, speed) {
             var dots = [];
