@@ -7,7 +7,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>로그인</title>
-    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="SAF/static/css/style.css">
     <script>
         window.onload = function () {
             document.getElementById('login').className = 'nav-link active'
@@ -16,27 +18,31 @@
 
 </head>
 
-<body>
-
-    <form method="POST">{% csrf_token %}
-        <table style="width:30%;" class="table">
-            <tr>
-                <th>경찰서 코드</th>
-                <td><input type="text" name="username"></td>
-            </tr>
-            <tr>
-                <th>암호</th>
-                <td><input type="password" name="password"></td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <input class="btn btn-primary" type="submit" value="로그인">
-                    <input class="btn btn-danger" type="reset" value="다시입력">
-                </td>
-            </tr>
-        </table>
-    </form>
-
-</body>
-
-</html>
+<body class="text-center" style="margin-top: 200px;">
+    <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;height: 100%;">
+        <div style="width: 300px;text-align: center;background-color: #ffffff;">
+            <div>
+                <input type="image" src="\static\data\SAF_policeEmblemLogo.jpg" style="width: 300px;">
+            </div>
+                
+            <form method="POST">{% csrf_token %}
+                <div style="margin: 10px;">
+                    <div style="  display: block;text-align: left;padding-top: 5px;min-width: 65px;">
+                        <span>아이디</span>
+                        <input type="text" name="username" class="form-control">
+                    </div>
+                    <div style="  display: block;text-align: left;padding-top: 5px;min-width: 65px;">
+                        <span>비밀번호 </span>
+                        <input type="password" name="password" class="form-control">
+                    </div>
+                    <div style="margin: 10px 0;">
+                        <input style="padding: 3px 5px;"class="btn btn-primary w-100" type="submit" value="로그인">
+                    </div>
+                  </div>
+            </form>
+        </div>
+    </div>
+        
+    </body>
+    
+    </html>
