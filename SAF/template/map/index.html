@@ -10,7 +10,7 @@
     <script type="text/javascript"
         src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=mdbxo3pu0t"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>	
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <script type="text/javascript"
         src="https://openapi.map.naver.com/openapi/v3/maps.js?clientId=mdbxo3pu0t&submodules=visualization"></script>
@@ -102,17 +102,19 @@
 
 <body>
     <div class="container">
-        <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+        <header
+            class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
             <a href="/map" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
                 <img src="\static\data\SAF_policeEmblemLogo.jpg" alt="Logo" width="180" height="60">
             </a>
-        <div class="col-md-3 text-end">
-            <button type="button" class="btn btn-outline-primary me-2" onclick="location.href='/account/logout'">로그아웃</button>
-            <button type="button" class="btn btn-primary" onclick="location.href='/account/register'">관리</button>
-        </div>
+            <div class="col-md-3 text-end">
+                <button type="button" class="btn btn-outline-primary me-2"
+                    onclick="location.href='/account/logout'">로그아웃</button>
+                <button type="button" class="btn btn-primary" onclick="location.href='/account/register'">관리</button>
+            </div>
         </header>
     </div>
-    <div style="margin-left:150px;">
+    <div style="margin-left:150px;display: inline;">
         <select id="guSelect">
             <option>선택</option>
             <option value="강남구">강남구</option>
@@ -143,6 +145,11 @@
             <!-- 추가적인 옵션들을 이곳에 나열할 수 있습니다 -->
         </select>
         <button class="findGuArea" onclick="findGuArea()">구 검색</button>
+    </div>
+
+    <div id="markerBox" style="margin-left:70px; display: inline;">
+        <input type="checkbox" name="store" onchange="fn_chbx(this)" checked> 주점
+        <input type="checkbox" name="park" onchange="fn_chbx(this)" checked> 주차장
     </div>
 
     <div id="map" style="width:80%;height:400px;margin:0 auto;"></div>
@@ -222,12 +229,46 @@
             }
         });
 
+        var store_list = []
         function store_marker(x, y) {
             var marker = new naver.maps.Marker({
                 position: new naver.maps.LatLng(x, y),
-                map: map
+                map: map,
+                icon: {
+                    content: '<div style="width:10px; height:10px;margin: 0px; padding: 0px; border: 0px; border-radius:50%; background-color:#0033FFAA;" ></div>',
+                    size: new naver.maps.Size(22, 35),
+                }
             });
+
+            store_list.push(marker)
         }
+
+        function remove_marker(marker_list) {
+            for (var i = 0; i < marker_list.length; i++) {
+                marker_list[i].setMap(null)
+            }
+        }
+
+        function set_marker(marker_list) {
+            for (var i = 0; i < marker_list.length; i++) {
+                marker_list[i].setMap(map)
+            }
+        }
+
+        function fn_chbx(obj) {
+            console.log(obj.checked)
+
+            if (obj.checked == false) {
+                if (obj.name == 'store') {
+                    remove_marker(store_list)
+                }
+            } else {
+                if (obj.name == 'store') {
+                    set_marker(store_list)
+                }
+            }
+        }
+
         function site_point(xy, text, min, max) {
             var xy_dot = [];
             var site_color;
@@ -331,26 +372,26 @@
 
     </script>
 
-    {% for x in store_dt %}
     <script>
+        // 상가마커표시
+        '{% for x in store_dt %}'
         store_marker('{{ x.위도 }}', '{{ x.경도 }}')
-    </script>
-    {% endfor %}
-    {% for i in pops %}
-    <script>
+        '{% endfor %}'
+
+        '{% for i in pops %}'
         site_point('{{i.AREA_XY}}', '{{i.AREA_CONGEST_LVL}}', '{{ i.AREA_PPLTN_MIN }}', '{{ i.AREA_PPLTN_MAX }}')
-    </script>
-    {% endfor %}
-    {% for i in roads%}
-    <script>
+        '{% endfor %}'
+
+        '{% for i in roads%}'
         road_site('{{i.XYLIST}}', '{{i.IDX}}', '{{i.SPD}}')
-    </script>
-    {% endfor %}
-    {% for i in parks%}
-    <script>
+        '{% endfor %}'
+
+        '{% for i in parks%}'
         park_site('{{ i.LAT }}', '{{ i.LNG }}', '{{ i.CPCTY }}', '{{ i.CUR_PRK_CNT }}')
+        '{% endfor %}'
     </script>
-    {% endfor %}
+
+
 </body>
 
 </html>
