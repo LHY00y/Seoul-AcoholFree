@@ -239,7 +239,6 @@
                     size: new naver.maps.Size(22, 35),
                 }
             });
-
             store_list.push(marker)
         }
 
@@ -256,15 +255,13 @@
         }
 
         function fn_chbx(obj) {
-            console.log(obj.checked)
-
-            if (obj.checked == false) {
+            if (obj.checked == true) {
                 if (obj.name == 'store') {
-                    remove_marker(store_list)
+                    set_marker(store_list)
                 }
             } else {
                 if (obj.name == 'store') {
-                    set_marker(store_list)
+                    remove_marker(store_list)
                 }
             }
         }
