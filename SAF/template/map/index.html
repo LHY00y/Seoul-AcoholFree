@@ -168,56 +168,73 @@
                 position: naver.maps.Position.TOP_RIGHT // 줌 컨트롤 패널 위치
             }
         };
+       
 
+        var map = new naver.maps.Map('map', mapOptions);
 
-        map = new naver.maps.Map('map', mapOptions);
+// Parse the CSV file
+var csvFile = '{{ "/static/data/AlcoholAccident.csv" }}';
 
-        var csvFile = '{{ "/static/data/AlcoholAccident.csv" }}';
+Papa.parse(csvFile, {
+    download: true,
+    complete: function (results) {
+        var data = results.data;
+        var matchingLocations = []; // Array to store matching locations
 
-        Papa.parse(csvFile, {
-            download: true,
-            complete: function (results) {
-                var data = results.data;
+        for (var i = 1; i < data.length; i++) {
+            var row = data[i];
+            var name = row[0];
+            var latitude = parseFloat(row[1]);
+            var longitude = parseFloat(row[2]);
+            var count = parseInt(row[3]);
+            var location = new naver.maps.LatLng(latitude, longitude);
 
-                for (var i = 1; i < data.length; i++) {
-                    var row = data[i];
-                    var name = row[0];
-                    // name: 주소
-                    var latitude = parseFloat(row[1]);
-                    // latitude: 경도
-                    var longitude = parseFloat(row[2]);
-                    // longitude: 위도
-                    var count = parseInt(row[3]);
-                    // count :발생건수 
+            var iconUrl;
+            if (count === 3) {
+                iconUrl = '{{"/static/data/accident3.jpg" }}';
+            } else if (count === 4) {
+                iconUrl = '{{ "/static/data/accident4.jpg" }}';
+            } else if (count === 5) {
+                iconUrl = '{{ "/static/data/accident5.jpg" }}';
+            } else if (count === 6) {
+                iconUrl = '{{ "/static/data/accident6.jpg" }}';
+            }
 
-                    var location = new naver.maps.LatLng(latitude, longitude);
+            var policeAddress = '{{police_table.address}}';
+            var policeDistrict = policeAddress.substring(policeAddress.lastIndexOf(' ') + 1); // 구 정보 추출
 
-                    var iconUrl;
-                    if (count === 3) {
-                        iconUrl = '{{"/static/data/accident3.jpg"}}';
-                    } else if (count === 4) {
-                        iconUrl = '{{"/static/data/accident4.jpg"}}';
-                    } else if (count === 5) {
-                        iconUrl = '{{"/static/data/accident5.jpg"}}';
-                    } else if (count === 6) {
-                        iconUrl = '{{"/static/data/accident6.jpg"}}';
-                    }
+            if (name.includes(policeDistrict)) {
+                matchingLocations.push({
+                    location: location,
+                    iconUrl: iconUrl,
+                    name: name
+                });
+            }
+        }
 
+        if (matchingLocations.length > 0) {
+            var centerLocation = matchingLocations[0].location; // 중앙 지점 설정
+            var iconRange = 0.05; // 아이콘을 표시할 범위 설정 (예: 0.05는 0.05도 범위 내)
 
+           
+            for (var j = 0; j < matchingLocations.length; j++) {
+                var matchingLocation = matchingLocations[j];
+                var distance = naver.maps.Math.getDistance(centerLocation, matchingLocation.location);
 
+                if (distance <= iconRange) {
                     var marker = new naver.maps.Marker({
-                        position: location,
+                        position: matchingLocation.location,
                         map: map,
                         icon: {
-                            url: iconUrl,
-                            size: new naver.maps.Size(800, 600),
+                            url: matchingLocation.iconUrl,
+                            size: new naver.maps.Size(50, 27),
                             origin: new naver.maps.Point(0, 0),
                             anchor: new naver.maps.Point(25, 26)
                         }
                     });
 
                     var infowindow = new naver.maps.InfoWindow({
-                        content: '<div style="padding:10px;">' + name + '</div>'
+                        content: '<div style="padding:10px;">' + matchingLocation.name + '</div>'
                     });
 
                     naver.maps.Event.addListener(marker, 'click', (function (marker, infowindow) {
@@ -227,8 +244,13 @@
                     })(marker, infowindow));
                 }
             }
-        });
+        } else {
+            alert('No matching locations found.');
+        }
+    }
+});
 
+        
         var store_list = []
         function store_marker(x, y) {
             var marker = new naver.maps.Marker({
