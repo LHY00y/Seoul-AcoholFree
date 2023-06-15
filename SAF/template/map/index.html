@@ -147,12 +147,36 @@
         <button class="findGuArea" onclick="findGuArea()">구 검색</button>
     </div>
 
-    <div id="markerBox" style="margin-left:70px; display: inline;">
-        <input type="checkbox" name="store" onchange="fn_chbx(this)" checked> 주점
-        <input type="checkbox" name="park" onchange="fn_chbx(this)" checked> 주차장
-    </div>
 
+    
     <div id="map" style="width:80%;height:400px;margin:0 auto;"></div>
+    <div style="margin: 10px 0px 0px 150px;">
+        <button type="button" class="btn btn-outline-primary btn-lg active" name="accident" onclick="fn_chbx(this)"
+            style="font-size: 10px; width:80px; height:90px;" data-bs-toggle="button" autocomplete="off">
+            <img style="width: 50px; height: 50px;"
+                src="https://cdn-icons-png.flaticon.com/128/4350/4350983.png"><br>음주사고다발지역</button>
+        <button type="button" class="btn btn-outline-primary btn-lg active" name="foot_traffic" onclick="fn_chbx(this)"
+            style="font-size: 10px; width:80px; height:90px;" data-bs-toggle="button" autocomplete="off">
+            <img style="width: 50px; height: 50px;"
+                src="https://cdn-icons-png.flaticon.com/128/5075/5075317.png"><br>유동인구</button>
+        <button type="button" class="btn btn-outline-primary btn-lg active" name="traffic_info" onclick="fn_chbx(this)"
+            style="font-size: 10px; width:80px; height:90px;" data-bs-toggle="button" autocomplete="off">
+            <img style="width: 50px; height: 50px;"
+                src="https://cdn-icons-png.flaticon.com/128/2318/2318890.png"><br>교통정보</button>
+        <button type="button" class="btn btn-outline-primary btn-lg active" name="parking_space" onclick="fn_chbx(this)" 
+            style="font-size: 10px; width:80px; height:90px;" data-bs-toggle="button" autocomplete="off">
+            <img style="width: 50px; height: 50px;"
+                src="https://cdn-icons-png.flaticon.com/128/2819/2819928.png"><br>주차장</button>
+        <button type="button" class="btn btn-outline-primary btn-lg active" name="store" onclick="fn_chbx(this)"
+            style="font-size: 10px; width:80px; height:90px;" data-bs-toggle="button" autocomplete="off">
+            <img style="width: 50px; height: 50px;"
+                src="https://cdn-icons-png.flaticon.com/128/6734/6734280.png">주점</button>
+        <button type="button" class="btn btn-outline-primary btn-lg active" name="police_station"
+        onclick="fn_chbx(this)" style="font-size: 10px; width:80px; height:90px;" data-bs-toggle="button"
+            autocomplete="off">
+            <img style="width: 50px; height: 50px;"
+                src="https://cdn-icons-png.flaticon.com/128/1669/1669616.png">경찰서</button>
+    </div>
     <script>
         var mapOptions = {
             center: new naver.maps.LatLng(map_longitude, map_latitude),
@@ -169,7 +193,7 @@
             }
         };
         var map = new naver.maps.Map('map', mapOptions);
-
+        var accident_list = [];
         var csvFile = '{{ "/static/data/AlcoholAccident.csv" }}';
 
         Papa.parse(csvFile, {
@@ -223,6 +247,7 @@
                         infowindow.open(map, marker);
                     };
                 })(marker, infowindow));
+                accident_list.push(marker);
             }
         }
     }
@@ -254,17 +279,33 @@
         }
 
         function fn_chbx(obj) {
-            if (obj.checked == true) {
+            if(obj.classList.contains('active')){
                 if (obj.name == 'store') {
                     set_marker(store_list)
+                }else if(obj.name =='accident'){
+                    set_marker(accident_list)
+                }else if(obj.name =='parking_space'){
+                    set_marker(parking_space_list)
+                }else if(obj.name =='foot_traffic'){
+                    set_marker(foot_trafic_list)
+                }else if(obj.name =='traffic_info'){
+                    set_marker(traffic_info_list)
                 }
             } else {
                 if (obj.name == 'store') {
                     remove_marker(store_list)
+                }else if(obj.name == 'accident'){
+                    remove_marker(accident_list)
+                }else if(obj.name =='parking_space'){
+                    remove_marker(parking_space_list)
+                }else if(obj.name =='foot_traffic'){
+                    remove_marker(foot_trafic_list)
+                }else if(obj.name =='traffic_info'){
+                    remove_marker(traffic_info_list)
                 }
             }
         }
-
+        var foot_trafic_list=[]
         function site_point(xy, text, min, max) {
             var xy_dot = [];
             var site_color;
@@ -314,7 +355,9 @@
                     sitepop.open(map, circle);
                 };
             })(circle, sitepop));
+            foot_trafic_list.push(circle);
         }
+        var traffic_info_list = [];
         function road_site(middle, idx, speed) {
             var dots = [];
             var road_color;
@@ -343,7 +386,9 @@
                 clickable: true,
                 path: path
             });
+            traffic_info_list.push(polyline);
         }
+        var parking_space_list = []
         function park_site(x, y, prkfull, prkcnt) {
             if (prkcnt == null) {
 
@@ -363,6 +408,7 @@
                         prkInf.open(map, marker);
                     };
                 })(marker, prkInf));
+                parking_space_list.push(marker);
             }
         }
 
