@@ -2,7 +2,12 @@ from django.shortcuts import render, HttpResponse
 from .seoulData.store import store
 from .seoulData.datas import RTdata
 from map.models import Police
+from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponse
+import json
+from django.http import JsonResponse
 
+guSelectValue = '임시'
 
 def index(request):
     if not request.user.is_active:
@@ -20,15 +25,29 @@ def index(request):
         store_dt = store(police_table.address.split()[1],
                          "..\\SAF\\static\\data\\서울시 단란주점영업 인허가 정보.csv") + store(police_table.address.split()[1], '..\\SAF\\static\\data\\서울시 유흥주점영업 인허가 정보.csv')
 
-    RTdat = RTdata()
 
     # 로그인한 지부에 맞는 police객체 전달
 
     context = {
         'police_table': police_table,
-        'store_dt': store_dt,
+        'store_dt': store_dt
+    }
+    return render(request, 'map/index.html', context)
+
+
+@csrf_exempt
+def getGu(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        guSelectValue = data['guSelectValue']
+        context = dataAction(request, guSelectValue)
+        return JsonResponse(context)
+
+def dataAction(request, guvalue):
+    RTdat = RTdata(guvalue)
+    context = {
         'pops': RTdat[0].to_dict('records'),
         'roads': RTdat[1].to_dict('records'),
         'parks': RTdat[2].to_dict('records')
     }
-    return render(request, 'map/index.html', context)
+    return context

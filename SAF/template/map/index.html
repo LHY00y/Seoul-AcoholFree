@@ -144,7 +144,7 @@
             <option value="중랑구">중랑구</option>
             <!-- 추가적인 옵션들을 이곳에 나열할 수 있습니다 -->
         </select>
-        <button class="findGuArea" onclick="findGuArea()">구 검색</button>
+        <button class="findGuArea" id="getguName" onclick="findGuArea()">구 검색</button>
     </div>
 
 
@@ -357,6 +357,13 @@
             })(circle, sitepop));
             foot_trafic_list.push(circle);
         }
+
+        function remove_site(foot_trafic_list) {
+            for (var i = 0; i < foot_trafic_list.length; i++) {
+                foot_trafic_list[i].setMap(null)
+            }//다른 구 불러올때 초기화용 기능
+        }
+
         var traffic_info_list = [];
         function road_site(middle, idx, speed) {
             var dots = [];
@@ -388,6 +395,13 @@
             });
             traffic_info_list.push(polyline);
         }
+
+        function remove_road(traffic_info_list) {
+            for (var i = 0; i < traffic_info_list.length; i++) {
+                traffic_info_list[i].setMap(null)
+            }//다른 구 불러올때 초기화용 기능
+        }
+
         var parking_space_list = []
         function park_site(x, y, prkfull, prkcnt) {
             if (prkcnt == null) {
@@ -411,7 +425,39 @@
                 parking_space_list.push(marker);
             }
         }
+        
+        function remove_park(parking_space_list) {
+            for (var i = 0; i < parking_space_list.length; i++) {
+                parking_space_list[i].setMap(null)
+            }//다른 구 불러올때 초기화용 기능
+        }
 
+        document.querySelector("#getguName").addEventListener("click", function() {
+            var guSelectValue = document.getElementById('guSelect').value;
+            fetch("/getGu/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": "{{ csrf_token }}"
+                },
+                body: JSON.stringify({guSelectValue: guSelectValue})
+            })
+            .then(response => response.json())
+            .then(data => {
+                remove_site(foot_trafic_list);
+                remove_road(traffic_info_list);
+                remove_park(parking_space_list);
+                for (var i = 0; i < data.pops.length; i++) {
+                    site_point(data.pops[i].AREA_XY, data.pops[i].AREA_CONGEST_LVL, data.pops[i].AREA_PPLTN_MIN, data.pops[i].AREA_PPLTN_MAX);
+                }
+                for (var i = 0; i < data.roads.length; i++) {
+                    road_site(data.roads[i].XYLIST, data.roads[i].IDX, data.roads[i].SPD);
+                }
+                for (var i = 0; i < data.parks.length; i++) {
+                    park_site(data.parks[i].LAT, data.parks[i].LNG, data.parks[i].CPCTY, data.parks[i].CUR_PRK_CNT);
+                }
+            });
+        });
 
     </script>
 
