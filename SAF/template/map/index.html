@@ -159,7 +159,7 @@
             fn_guSelect(cur_gu)
         </script>
 
-        <button class="findGuArea" onclick="findGuArea()">구 검색</button>
+        <button class="findGuArea" id="getguName" onclick="findGuArea()">구 검색</button>
     </div>
 
 
@@ -366,8 +366,7 @@
             });
             naver.maps.Event.addListener(circle, 'click', (function (circle, sitepop) {
                 return function () {
-                    var latlng = new naver.maps.LatLng(xy_dot[1], xy_dot[0]);
-                    sitepop.open(map, circle);
+                    sitepop.open(map, new naver.maps.LatLng(xy_dot[1], xy_dot[0]))
                 };
             })(circle, sitepop));
             foot_trafic_list.push(circle);
@@ -425,9 +424,16 @@
 
             }
             else {
+                var parkIcon = '{{"/static/data/parking.png"}}';
                 var marker = new naver.maps.Marker({
                     position: new naver.maps.LatLng(x, y),
-                    map: map
+                    map: map,
+                    icon: {
+                        url: parkIcon,
+                        size: new naver.maps.Size(50, 50),
+                        origin: new naver.maps.Point(0, 0),
+                        anchor: new naver.maps.Point(25, 25)
+                    }
                 });
                 var prkref = '주차된 차량 : ' + (prkfull - prkcnt);
                 var prkInf = new naver.maps.InfoWindow({
