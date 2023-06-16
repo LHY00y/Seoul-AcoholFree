@@ -27,8 +27,21 @@ def index(request):
     context = {
         'police_table': police_table,
         'store_dt': store_dt,
+        'gu_list': addr(),
         'pops': RTdat[0].to_dict('records'),
         'roads': RTdat[1].to_dict('records'),
         'parks': RTdat[2].to_dict('records')
     }
     return render(request, 'map/index.html', context)
+
+
+def addr():
+    addr_list = list(Police.objects.values('address', 'name'))
+    gu_list = {}
+    for addr in addr_list:
+        # gu_list에 이미 들어가있는 구 일때
+        if addr['address'].split()[1] in gu_list:
+            gu_list[addr['address'].split()[1]].append(addr['name'])
+        else:
+            gu_list[addr['address'].split()[1]] = [addr['name']]
+    return gu_list
