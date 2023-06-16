@@ -30,7 +30,8 @@ def index(request):
 
     context = {
         'police_table': police_table,
-        'store_dt': store_dt
+        'store_dt': store_dt,
+        'gu_list': addr(),
     }
     return render(request, 'map/index.html', context)
 
