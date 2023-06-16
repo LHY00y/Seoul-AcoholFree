@@ -360,8 +360,9 @@
 
         function remove_site(foot_trafic_list) {
             for (var i = 0; i < foot_trafic_list.length; i++) {
-                foot_trafic_list[i].setMap(null)
+                foot_trafic_list[i].setMap(null);
             }//다른 구 불러올때 초기화용 기능
+            foot_trafic_list.length=0;
         }
 
         var traffic_info_list = [];
@@ -398,8 +399,9 @@
 
         function remove_road(traffic_info_list) {
             for (var i = 0; i < traffic_info_list.length; i++) {
-                traffic_info_list[i].setMap(null)
+                traffic_info_list[i].setMap(null);
             }//다른 구 불러올때 초기화용 기능
+            traffic_info_list.length=0;
         }
 
         var parking_space_list = []
@@ -428,8 +430,9 @@
         
         function remove_park(parking_space_list) {
             for (var i = 0; i < parking_space_list.length; i++) {
-                parking_space_list[i].setMap(null)
+                parking_space_list[i].setMap(null);
             }//다른 구 불러올때 초기화용 기능
+            parking_space_list.length=0;
         }
 
         document.querySelector("#getguName").addEventListener("click", function() {
