@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from . import views
+from map import views as map_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -24,5 +25,6 @@ urlpatterns = [
     path('map/', include('map.urls')),
     path('account/', include('django.contrib.auth.urls')),
 #    path('account/register', views.createAccount),
-
+    path('getGu/', map_views.getGu),
+    path('dataAction/', map_views.dataAction, name='dataAction')
 ]
