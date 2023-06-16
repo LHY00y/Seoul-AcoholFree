@@ -30,10 +30,10 @@
         //JSON으로 변경
         let gu_json = JSON.parse(gu_list)
 
+
         function findGuArea() {
-            var selectGuName = document.getElementById("guSelect");
-            var selectedValue = selectGuName.options[selectGuName.selectedIndex].value;
-            var searchGu = "https://api.vworld.kr/req/data?service=data&request=GetFeature&data=LT_C_ADSIGG_INFO&key=D60D697E-DA1B-3C03-B045-CC469028D5FB&domain=127.0.0.1:8000/&attrFilter=sig_kor_nm:like:" + selectedValue;
+
+            var searchGu = "https://api.vworld.kr/req/data?service=data&request=GetFeature&data=LT_C_ADSIGG_INFO&key=D60D697E-DA1B-3C03-B045-CC469028D5FB&domain=127.0.0.1:8000/&attrFilter=sig_kor_nm:like:" + cur_gu;
             if (polyline) {
                 polyline.setMap(null);
             }
@@ -44,11 +44,11 @@
                 })
                 .then(function (data) {
                     // 응답 데이터를 처리하고 지도에 경계선을 그리는 작업 수행
-                    console.log(data); // 응답 데이터 콘솔에 출력
+                    //console.log(data); // 응답 데이터 콘솔에 출력
 
                     // 경계선을 그리기 위한 좌표 데이터 추출
                     var coordinates = [];
-                    console.log(coordinates)
+                    //console.log(coordinates)
                     var features = data.response.result.featureCollection.features;
                     for (var i = 0; i < features[0].geometry.coordinates[0][0].length; i++) {
                         var feature = features[0].geometry.coordinates[0][0][i];
@@ -75,6 +75,7 @@
         }
 
         window.onload = function () {
+            findGuArea()
             naver.maps.Service.geocode({
                 query: '{{police_table.address}}'
             }, function (status, response) {
@@ -121,6 +122,12 @@
         </header>
     </div>
     <script>
+
+        function fn_searchGu() {
+            let poSelect = document.getElementById("poSelect");
+            location.href = "/map/" + poSelect.value
+        }
+
         //구 selector 변경시 지구대/파출소 리스트 selector 변경
         function fn_guSelect(gu) {
             let poSelect = document.getElementById("poSelect");
@@ -159,7 +166,7 @@
             fn_guSelect(cur_gu)
         </script>
 
-        <button class="findGuArea" id="getguName" onclick="findGuArea()">구 검색</button>
+        <button class="findGuArea" id="getguName" onclick="fn_searchGu()">구 검색</button>
     </div>
 
 
@@ -376,7 +383,7 @@
             for (var i = 0; i < foot_trafic_list.length; i++) {
                 foot_trafic_list[i].setMap(null);
             }//다른 구 불러올때 초기화용 기능
-            foot_trafic_list.length=0;
+            foot_trafic_list.length = 0;
         }
 
         var traffic_info_list = [];
@@ -415,7 +422,7 @@
             for (var i = 0; i < traffic_info_list.length; i++) {
                 traffic_info_list[i].setMap(null);
             }//다른 구 불러올때 초기화용 기능
-            traffic_info_list.length=0;
+            traffic_info_list.length = 0;
         }
 
         var parking_space_list = []
@@ -453,7 +460,7 @@
             for (var i = 0; i < parking_space_list.length; i++) {
                 parking_space_list[i].setMap(null);
             }//다른 구 불러올때 초기화용 기능
-            parking_space_list.length=0;
+            parking_space_list.length = 0;
         }
 
         document.querySelector("#getguName").addEventListener("click", function () {

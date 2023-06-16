@@ -10,13 +10,17 @@ from django.http import JsonResponse
 guSelectValue = '임시'
 
 
+def back_to_login():
+    msg = '<script>'
+    msg += 'alert("로그인 후 이용해주세요");'
+    msg += 'location.href="/..";'
+    msg += '</script>'
+    return HttpResponse(msg)
+
+
 def index(request):
     if not request.user.is_active:
-        msg = '<script>'
-        msg += 'alert("로그인 후 이용해주세요");'
-        msg += 'location.href="/..";'
-        msg += '</script>'
-        return HttpResponse(msg)
+        back_to_login()
 
     if request.user.username == 'admin':
         store_dt = None
@@ -25,8 +29,6 @@ def index(request):
         police_table = Police.objects.get(code=request.user.username)
         store_dt = store(police_table.address.split()[1],
                          "..\\SAF\\static\\data\\서울시 단란주점영업 인허가 정보.csv") + store(police_table.address.split()[1], '..\\SAF\\static\\data\\서울시 유흥주점영업 인허가 정보.csv')
-
-    # 로그인한 지부에 맞는 police객체 전달
 
     context = {
         'police_table': police_table,
@@ -65,3 +67,18 @@ def addr():
         else:
             gu_list[addr['address'].split()[1]] = [addr['name']]
     return gu_list
+
+
+def search(request, police):
+    if not request.user.is_active:
+        back_to_login()
+
+    police_table = Police.objects.get(name=police)
+    store_dt = store(police_table.address.split()[1],
+                     "..\\SAF\\static\\data\\서울시 단란주점영업 인허가 정보.csv") + store(police_table.address.split()[1], '..\\SAF\\static\\data\\서울시 유흥주점영업 인허가 정보.csv')
+    context = {
+        'police_table': police_table,
+        'store_dt': store_dt,
+        'gu_list': addr(),
+    }
+    return render(request, 'map/index.html', context)
