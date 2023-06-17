@@ -111,20 +111,22 @@ function site_point(xy, text, min, max) {
     } else {
         site_color = '#000000';
     }
-    if ((min + max) > 130000) {
-        rnd_size = 600;
-    } else if ((min + max) > 110000) {
-        rnd_size = 500;
-    } else if ((min + max) > 90000) {
-        rnd_size = 400;
-    } else if ((min + max) > 70000) {
-        rnd_size = 300;
-    } else if ((min + max) > 50000) {
-        rnd_size = 200;
-    } else if ((min + max) > 30000) {
-        rnd_size = 100;
-    } else {
-        rnd_size = 80;
+    if ((Number(min) + Number(max)) > 130000) {
+        rnd_size = 800;
+    } else if ((Number(min) + Number(max)) > 110000) {
+        rnd_size = 730;
+    } else if ((Number(min) + Number(max)) > 90000) {
+        rnd_size = 660;
+    } else if ((Number(min) + Number(max)) > 70000) {
+        rnd_size = 590;
+    } else if ((Number(min) + Number(max)) > 50000) {
+        rnd_size = 520;
+    } else if ((Number(min) + Number(max)) > 30000) {
+        rnd_size = 450;
+    } else if ((Number(min) + Number(max)) > 10000){
+        rnd_size = 360;
+    } else{
+        rnd_size = 270
     }
     var circle = new naver.maps.Circle({
         map: map,
@@ -261,13 +263,13 @@ Papa.parse(csvFile, {
 
                 var iconUrl;
                 if (count === 3) {
-                    iconUrl = '../../../static/data/accident3.jpg';
+                    iconUrl = '../../../static/data/accident33.jpg';
                 } else if (count === 4) {
-                    iconUrl = '../../../static/data/accident4.jpg';
+                    iconUrl = '../../../static/data/accident44.jpg';
                 } else if (count === 5) {
-                    iconUrl = '../../../static/data/accident5.jpg';
+                    iconUrl = '../../../static/data/accident55.jpg';
                 } else if (count === 6) {
-                    iconUrl = '../../../static/data/accident6.jpg';
+                    iconUrl = '../../../static/data/accident66.jpg';
                 }
 
                 var marker = new naver.maps.Marker({
@@ -275,7 +277,7 @@ Papa.parse(csvFile, {
                     map: map,
                     icon: {
                         url: iconUrl,
-                        size: new naver.maps.Size(50, 27),
+                        size: new naver.maps.Size(25, 25),
                         origin: new naver.maps.Point(0, 0),
                         anchor: new naver.maps.Point(25, 26)
                     }
