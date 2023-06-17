@@ -261,13 +261,13 @@ Papa.parse(csvFile, {
 
                 var iconUrl;
                 if (count === 3) {
-                    iconUrl = '../../../static/data/accident3.jpg';
+                    iconUrl = '../../../static/data/accident33.jpg';
                 } else if (count === 4) {
-                    iconUrl = '../../../static/data/accident4.jpg';
+                    iconUrl = '../../../static/data/accident44.jpg';
                 } else if (count === 5) {
-                    iconUrl = '../../../static/data/accident5.jpg';
+                    iconUrl = '../../../static/data/accident55.jpg';
                 } else if (count === 6) {
-                    iconUrl = '../../../static/data/accident6.jpg';
+                    iconUrl = '../../../static/data/accident66.jpg';
                 }
 
                 var marker = new naver.maps.Marker({
@@ -275,7 +275,7 @@ Papa.parse(csvFile, {
                     map: map,
                     icon: {
                         url: iconUrl,
-                        size: new naver.maps.Size(50, 27),
+                        size: new naver.maps.Size(25, 25),
                         origin: new naver.maps.Point(0, 0),
                         anchor: new naver.maps.Point(25, 26)
                     }
