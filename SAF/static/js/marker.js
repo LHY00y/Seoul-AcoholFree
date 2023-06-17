@@ -99,7 +99,7 @@ function site_point(xy, text, min, max) {
         strokeColor: site_color
     });
     var sitepop = new naver.maps.InfoWindow({
-        content: '<div style="padding:10px;">최소 인구 : ' + min + '</div><div style="padding:10px;">최대 인구 : ' + max + '</div>'
+        content: '<div style="padding:10px;">추정 인원수 : ' + min + ' ~ ' + max + '</div><div style="padding:10px;">밀집도 상태 : ' + text + '</div>'
     });
     naver.maps.Event.addListener(circle, 'click', (function (circle, sitepop) {
         return function () {
@@ -150,12 +150,12 @@ function road_site(middle, idx, speed) {
 
 var parking_space_list = []
 function park_site(x, y, prkfull, prkcnt) {
-    if (prkcnt == null) {
+    if (prkcnt == null || prkfull == 1) {
 
     }
     else {
 
-        var parkIcon = "../../../static/data/parking.png";
+        var parkIcon = "../../../static/data/park_zone.png";
         var marker = new naver.maps.Marker({
             position: new naver.maps.LatLng(x, y),
             map: map,
@@ -163,7 +163,7 @@ function park_site(x, y, prkfull, prkcnt) {
                 url: parkIcon,
                 size: new naver.maps.Size(50, 50),
                 origin: new naver.maps.Point(0, 0),
-                anchor: new naver.maps.Point(25, 25)
+                anchor: new naver.maps.Point(16, 16)
             }
         });
         var prkref = '주차된 차량 : ' + (prkfull - prkcnt);
@@ -239,31 +239,3 @@ Papa.parse(csvFile, {
         }
     }
 });
-
-
-// document.querySelector("#getguName").addEventListener("click", function () {
-//     var guSelectValue = document.getElementById('guSelect').value;
-//     fetch("/getGu/", {
-//         method: "POST",
-//         headers: {
-//             "Content-Type": "application/json",
-//             "X-CSRFToken": "{{ csrf_token }}"
-//         },
-//         body: JSON.stringify({ guSelectValue: guSelectValue })
-//     })
-//         .then(response => response.json())
-//         .then(data => {
-//             clear_marker(foot_trafic_list);
-//             clear_marker(traffic_info_list);
-//             clear_marker(parking_space_list);
-//             for (var i = 0; i < data.pops.length; i++) {
-//                 site_point(data.pops[i].AREA_XY, data.pops[i].AREA_CONGEST_LVL, data.pops[i].AREA_PPLTN_MIN, data.pops[i].AREA_PPLTN_MAX);
-//             }
-//             for (var i = 0; i < data.roads.length; i++) {
-//                 road_site(data.roads[i].XYLIST, data.roads[i].IDX, data.roads[i].SPD);
-//             }
-//             for (var i = 0; i < data.parks.length; i++) {
-//                 park_site(data.parks[i].LAT, data.parks[i].LNG, data.parks[i].CPCTY, data.parks[i].CUR_PRK_CNT);
-//             }
-//         });
-// });
