@@ -25,6 +25,8 @@ function fn_chbx(obj) {
             set_marker(foot_trafic_list)
         } else if (obj.name == 'traffic_info') {
             set_marker(traffic_info_list)
+        } else if (obj.name == 'police_station') {
+            set_marker(police_list)
         }
     } else {
         if (obj.name == 'store') {
@@ -37,6 +39,8 @@ function fn_chbx(obj) {
             remove_marker(foot_trafic_list)
         } else if (obj.name == 'traffic_info') {
             remove_marker(traffic_info_list)
+        } else if (obj.name == 'police_station') {
+            remove_marker(police_list)
         }
     }
 }
@@ -54,6 +58,39 @@ function store_marker(x, y) {
         }
     });
     store_list.push(marker)
+}
+
+//경찰서 마커
+var police_list = []
+function police_marker(addr, name, phone) {
+    naver.maps.Service.geocode({
+        query: addr
+    }, function (status, response) {
+        if (status === naver.maps.Service.Status.ERROR) {
+            return alert('Something Wrong!');
+        }
+        var item = response.v2.addresses[0]
+
+        var marker = new naver.maps.Marker({
+            position: new naver.maps.LatLng(item.y, item.x),
+            map: map,
+            icon: {
+                content: '<img src=../../../static/data/police.png style="width:30px; height:30px; padding:5px;border: 0px; border-radius:50%; background-color:#FFFFFF;" >',
+                size: new naver.maps.Size(22, 35),
+            }
+        });
+        var prkInf = new naver.maps.InfoWindow({
+            content: '<div style="padding:10px;"> ' + name + '<br>' + phone + '</div>'
+        });
+        naver.maps.Event.addListener(marker, 'click', (function (marker, prkInf) {
+            return function () {
+                var latlng = new naver.maps.LatLng(37.3595704, 127.105399);
+                prkInf.open(map, marker);
+            };
+        })(marker, prkInf));
+        police_list.push(marker)
+    });
+
 }
 
 //유동인구

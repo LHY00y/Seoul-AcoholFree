@@ -44,12 +44,7 @@
                 if (status === naver.maps.Service.Status.ERROR) {
                     return alert('Something Wrong!');
                 }
-                if (response.v2.meta.totalCount === 0) {
-                    return alert('올바른 주소를 입력해주세요.');
-                }
-                var htmlAddresses = [],
-                    item = response.v2.addresses[0],
-                    point = new naver.maps.Point(item.x, item.y);
+                var item = response.v2.addresses[0]
 
                 map_longitude = item.y
                 map_latitude = item.x
@@ -138,14 +133,22 @@
         store_marker('{{ x.위도 }}', '{{ x.경도 }}')
         '{% endfor %}'
 
+        //경찰서 마커표시
+        '{% for x in region_police %}'
+        police_marker('{{ x.address}}', '{{x.name}}', '{{x.phone}}')
+        '{% endfor %}'
+
+        //사고다발지역 마커표시
         '{% for i in pops %}'
         site_point('{{i.AREA_XY}}', '{{i.AREA_CONGEST_LVL}}', '{{ i.AREA_PPLTN_MIN }}', '{{ i.AREA_PPLTN_MAX }}')
         '{% endfor %}'
 
+        //교통정보 마커표시
         '{% for i in roads%}'
         road_site('{{i.XYLIST}}', '{{i.IDX}}', '{{i.SPD}}')
         '{% endfor %}'
 
+        //주차장 마커표시
         '{% for i in parks%}'
         park_site('{{ i.LAT }}', '{{ i.LNG }}', '{{ i.CPCTY }}', '{{ i.CUR_PRK_CNT }}')
         '{% endfor %}'
