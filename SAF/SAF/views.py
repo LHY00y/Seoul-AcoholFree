@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, HttpResponse
 from map.models import Police
+from django.contrib.auth.models import User
 from SAF.init_police import init_police
 
 
@@ -16,24 +17,30 @@ def index(request):
         return redirect('/account/login')
 
 
-# def createAccount(request):
-#     if request.method == "GET":
-#         return render(request, 'registration/register.html')
-#     elif request.method == "POST":
-#         code = request.POST.get('code')
-#         password = request.POST.get('password')
-#         name = request.POST.get('name')
+def createAccount(request):
+    if request.method == "GET":
+        context = {
+            'code': 'S'+'{0:03d}'.format(len(list(Police.objects.values('id')))+2)
+        }
+        return render(request, 'registration/register.html', context)
+    elif request.method == "POST":
+        code = request.POST.get('code')
+        password = request.POST.get('password')
+        con = request.POST.get('con')
+        office = request.POST.get('office')
+        address = request.POST.get('address')
+        classify = request.POST.get('classify')
+        phone = request.POST.get('phone')
+        print(code)
 
-#         User.objects.create_user(
-#             code, "", password, first_name=name)
+        User.objects.create_user(
+            code, "", password, first_name=office+" "+classify, last_name=con)
 
-#         police_table = Police()
-#         police_table.code = code
-#         police_table.gu = request.POST.get('gu')
-#         police_table.name = name
-#         # name으로 경도 위도 찾아서 알아서 넣기
-#         # 없으면....구의 위치를 기본값으로
-#         # police_table.longitude =
-#         # police_table.latitude =
-#         police_table.save()
-#         return redirect('')
+        police_table = Police()
+        police_table.code = code
+        police_table.name = con + " " + office + " " + classify
+        police_table.address = address
+        police_table.phone = phone
+        police_table.classify = classify
+        police_table.save()
+        return redirect('/')

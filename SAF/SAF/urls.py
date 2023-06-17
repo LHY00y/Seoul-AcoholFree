@@ -24,7 +24,7 @@ urlpatterns = [
     path('', views.index),
     path('map/', include('map.urls')),
     path('account/', include('django.contrib.auth.urls')),
-#    path('account/register', views.createAccount),
+    path('account/register', views.createAccount),
     path('getGu/', map_views.getGu),
     path('dataAction/', map_views.dataAction, name='dataAction')
 ]

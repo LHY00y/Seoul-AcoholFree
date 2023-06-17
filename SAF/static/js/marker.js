@@ -56,7 +56,7 @@ function store_marker(x, y) {
     store_list.push(marker)
 }
 
-//교통정보 마커
+//유동인구
 var foot_trafic_list = []
 function site_point(xy, text, min, max) {
     var xy_dot = [];
