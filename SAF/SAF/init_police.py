@@ -32,4 +32,4 @@ def add_police(num, con, office, classify, phone, address):
 
     # 비밀번호는 경찰서 전화번호 뒷자리
     User.objects.create_user(
-        police_table.code, "", phone[-4:], first_name=office+classify, last_name=con)
+        police_table.code, "", phone[-4:], first_name=office+" "+classify, last_name=con)

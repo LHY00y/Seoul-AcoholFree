@@ -13,25 +13,43 @@
         <table>
             <tr>
                 <th>경찰서 코드</th>
-                <td><input type="text" name="username"></td>
+                <td><input type="text" disabled value="{{code}}">
+                    <input type="hidden" name="code" value="{{code}}">
+                </td>
+                <th>관할 경찰서</th>
+                <td><input type="text" name="con" required></td>
+            </tr>
+            <tr>
+                <th>관서명</th>
+                <td><input type="text" name="office" required></td>
+                <th>구분</th>
+                <td><select name="classify" required>
+                        <option>파출소</option>
+                        <option>지구대</option>
+                    </select></td>
             </tr>
             <tr>
                 <th>비밀번호</th>
-                <td><input type="password" name="password"></td>
+                <td><input type="password" name="password" required></td>
             </tr>
             <tr>
-                <th>경찰서 지부</th>
-                <td><input type="text" name="first_name"></td>
+                <th>전화번호</th>
+                <td><input type="tel" name="phone" placeholder="02-000-0000" pattern="02-[0-9]{3}-[0-9]{4}" required>
+                </td>
             </tr>
+            <tr>
+                <th>주소</th>
+                <td colspan="2"><input type="text" name="address" required></td>
+            </tr>
+
             <tr>
                 <td colspan="2">
-                    <input type="submit" value="지부등록">
+                    <input type="submit" value="등록">
                     <input type="reset" value="다시입력">
                 </td>
             </tr>
 
         </table>
-
     </form>
 
 </body>
