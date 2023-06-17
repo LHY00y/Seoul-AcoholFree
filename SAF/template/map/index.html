@@ -73,51 +73,61 @@
         </header>
     </div>
 
-    <div style="margin-left:150px;display: inline;">
-        <select id="guSelect" onchange="fn_guSelect(this.value)">
-            {% for gu in gu_list %}
-            {% if gu in police_table.address %}
-            <option value="{{gu}}" selected>{{gu}}</option>
-            <script>
-                cur_gu = '{{gu}}'
-            </script>
-            {% else %}
-            <option value="{{gu}}">{{gu}}</option>
-            {% endif %}
-            {% endfor %}
-        </select>
-        <select id="poSelect">
-            <option value="{{police_table.name}}" selected disabled>{{police_table.name}}</option>
-        </select>
-
-        <script>
-            fn_guSelect(cur_gu)
-        </script>
-
-        <button class="findGuArea" id="getguName" onclick="fn_searchGu()">구 검색</button>
+    <div>
+        <table style="margin-left:10%;">
+            <tr>
+                <td>
+                    <select class="form-select" id="guSelect" onchange="fn_guSelect(this.value)">
+                        {% for gu in gu_list %}
+                        {% if gu in police_table.address %}
+                        <option value="{{gu}}" selected>{{gu}}</option>
+                        <script>
+                            cur_gu = '{{gu}}'
+                        </script>
+                        {% else %}
+                        <option value="{{gu}}">{{gu}}</option>
+                        {% endif %}
+                        {% endfor %}
+                    </select>
+                </td>
+                <td>
+                    <select class="form-select" id="poSelect">
+                        <option value="{{police_table.name}}" selected disabled>{{police_table.name}}</option>
+                    </select>
+                </td>
+                <script>
+                    fn_guSelect(cur_gu)
+                </script>
+                <td>
+                    <button class="btn btn-primary" id="getguName" onclick="fn_searchGu()">구 검색</button>
+                </td>
+            </tr>
+        </table>
     </div>
 
     <div id="map" class="map-size"></div>
     <div id="check-button-div">
-        <button type="button" class="btn btn-outline-primary btn-lg active check-button" name="accident" onclick="fn_chbx(this)"
-             style="font-size: 10px;"data-bs-toggle="button">
-            <img class="check-button-img" src="https://cdn-icons-png.flaticon.com/128/4350/4350983.png"><br>음주사고다발지역</button>
-        <button type="button" class="btn btn-outline-primary btn-lg active check-button" name="foot_traffic" onclick="fn_chbx(this)"
-            style="font-size: 10px;" data-bs-toggle="button">
-            <img class="check-button-img" src="https://cdn-icons-png.flaticon.com/128/5075/5075317.png"><br>유동인구</button>
-        <button type="button" class="btn btn-outline-primary btn-lg active check-button" name="traffic_info" onclick="fn_chbx(this)"
-            style="font-size: 10px;" data-bs-toggle="button">
-            <img class="check-button-img" src="https://cdn-icons-png.flaticon.com/128/2318/2318890.png"><br>교통정보</button>
-        <button type="button" class="btn btn-outline-primary btn-lg active check-button" name="parking_space" onclick="fn_chbx(this)"
-            style="font-size: 10px;" data-bs-toggle="button">
-            <img class="check-button-img" src="https://cdn-icons-png.flaticon.com/128/2819/2819928.png"><br>주차장</button>
-        <button type="button" class="btn btn-outline-primary btn-lg active check-button" name="store" onclick="fn_chbx(this)"
-            style="font-size: 10px;" data-bs-toggle="button">
-            <img class="check-button-img"src="https://cdn-icons-png.flaticon.com/128/6734/6734280.png">주점</button>
-        <button type="button" class="btn btn-outline-primary btn-lg active check-button" name="police_station"
+        <button type="button" class="btn btn-outline-primary btn-lg active check-button" name="accident"
             onclick="fn_chbx(this)" style="font-size: 10px;" data-bs-toggle="button">
             <img class="check-button-img"
-                src="https://cdn-icons-png.flaticon.com/128/1669/1669616.png">경찰서</button>
+                src="https://cdn-icons-png.flaticon.com/128/4350/4350983.png"><br>음주사고다발지역</button>
+        <button type="button" class="btn btn-outline-primary btn-lg active check-button" name="foot_traffic"
+            onclick="fn_chbx(this)" style="font-size: 10px;" data-bs-toggle="button">
+            <img class="check-button-img"
+                src="https://cdn-icons-png.flaticon.com/128/5075/5075317.png"><br>유동인구</button>
+        <button type="button" class="btn btn-outline-primary btn-lg active check-button" name="traffic_info"
+            onclick="fn_chbx(this)" style="font-size: 10px;" data-bs-toggle="button">
+            <img class="check-button-img"
+                src="https://cdn-icons-png.flaticon.com/128/2318/2318890.png"><br>교통정보</button>
+        <button type="button" class="btn btn-outline-primary btn-lg active check-button" name="parking_space"
+            onclick="fn_chbx(this)" style="font-size: 10px;" data-bs-toggle="button">
+            <img class="check-button-img" src="https://cdn-icons-png.flaticon.com/128/2819/2819928.png"><br>주차장</button>
+        <button type="button" class="btn btn-outline-primary btn-lg active check-button" name="store"
+            onclick="fn_chbx(this)" style="font-size: 10px;" data-bs-toggle="button">
+            <img class="check-button-img" src="https://cdn-icons-png.flaticon.com/128/6734/6734280.png">주점</button>
+        <button type="button" class="btn btn-outline-primary btn-lg active check-button" name="police_station"
+            onclick="fn_chbx(this)" style="font-size: 10px;" data-bs-toggle="button">
+            <img class="check-button-img" src="https://cdn-icons-png.flaticon.com/128/1669/1669616.png">경찰서</button>
     </div>
 
     <script src='..\..\static\js\map.js'></script>
