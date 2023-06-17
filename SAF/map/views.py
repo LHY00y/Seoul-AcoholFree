@@ -38,24 +38,6 @@ def index(request):
     return render(request, 'map/index.html', context)
 
 
-@csrf_exempt
-def getGu(request):
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        guSelectValue = data['guSelectValue']
-        context = dataAction(request, guSelectValue)
-        return JsonResponse(context)
-
-
-def dataAction(request, guvalue):
-    RTdat = RTdata(guvalue)
-    context = {
-        'pops': RTdat[0].to_dict('records'),
-        'roads': RTdat[1].to_dict('records'),
-        'parks': RTdat[2].to_dict('records')
-    }
-    return context
-
 
 def addr():
     addr_list = list(Police.objects.values('address', 'name'))
@@ -73,12 +55,17 @@ def search(request, police):
     if not request.user.is_active:
         back_to_login()
 
+    
     police_table = Police.objects.get(name=police)
     store_dt = store(police_table.address.split()[1],
                      "..\\SAF\\static\\data\\서울시 단란주점영업 인허가 정보.csv") + store(police_table.address.split()[1], '..\\SAF\\static\\data\\서울시 유흥주점영업 인허가 정보.csv')
+    RTdat = RTdata(police_table.address.split()[1])
     context = {
         'police_table': police_table,
         'store_dt': store_dt,
         'gu_list': addr(),
+        'pops': RTdat[0].to_dict('records'),
+        'roads': RTdat[1].to_dict('records'),
+        'parks': RTdat[2].to_dict('records')
     }
     return render(request, 'map/index.html', context)
