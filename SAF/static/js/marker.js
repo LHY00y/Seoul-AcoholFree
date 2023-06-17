@@ -182,6 +182,25 @@ function road_site(middle, idx, speed) {
         clickable: true,
         path: path
     });
+    var roadSpd = new naver.maps.InfoWindow({
+        content: '<div style="padding:10px;">교통상황 : ' + idx + '</div><div style="padding:10px;">속도 : ' + speed + 'km/h</div>'
+    });
+    naver.maps.Event.addListener(polyline, 'click', (function (polyline, roadSpd) {
+        return function () {
+            if (dots.length % 2 == 0) {
+                var dot1 = [];
+                var dot2 = [];
+                dot1 = dots[(dots.length / 2) - 1].split('_');
+                dot2 = dots[dots.length / 2].split('_');
+                roadSpd.open(map, new naver.maps.LatLng((Number(dot1[1]) + Number(dot2[1])) / 2, (Number(dot1[0]) + Number(dot2[0])) / 2));
+            }
+            else if (dots.length % 2 == 1) {
+                var dot = [];
+                dot = dots[(dots.length / 2) - 0.5 ].split('_');
+                roadSpd.open(map, new naver.maps.LatLng(dot[1] , dot[0]));
+            }
+        };
+    })(polyline, roadSpd));
     traffic_info_list.push(polyline);
 }
 

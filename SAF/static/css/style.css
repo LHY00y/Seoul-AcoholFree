@@ -4,7 +4,6 @@ html, body {
   height: 100%;
   background: #ffffff;
 }
-
 #container {
   display: flex;
   flex-direction: row;
@@ -15,38 +14,52 @@ html, body {
 
 #loginBox {
   width: 300px;
-  text-align: center;
+  text-align: left;
   background-color: #ffffff;
 }
 .input-form-box {
-  border: 0px solid #ff0000;
-  display: flex;
-  margin-bottom: 5px;
-}
-.input-form-box > span {
   display: block;
   text-align: left;
   padding-top: 5px;
   min-width: 65px;
 }
+
+.input-form-span{
+  padding-right: 210px;
+}
 .button-login-box {
   margin: 10px 0;
 }
-#loginBoxTitle {
-  color:#000000;
-  font-weight: bold;
-  font-size: 32px;
-  text-transform: uppercase;
-  padding: 5px;
-  margin-bottom: 20px;
-  background: linear-gradient(to right, #270a09, #8ca6ce);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
+
 #inputBox {
   margin: 10px;
 }
 
 #inputBox button {
   padding: 3px 5px;
+}
+
+#search-gu {
+  margin-left:150px;
+  display: inline;
+}
+
+.map-size{
+  width:80%;height:400px;
+  margin:0 auto;
+}
+
+#check-button-div{
+  margin: 10px 0px 0px 150px;
+}
+
+.check-button{
+  width:80px; 
+  height:90px;
+  
+}
+
+.check-button-img{
+  width: 50px; 
+  height: 50px;
 }
